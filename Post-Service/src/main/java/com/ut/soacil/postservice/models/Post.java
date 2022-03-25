@@ -43,10 +43,6 @@ public class Post {
 		return id;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public String getContent() {
 		return content;
 	}
@@ -73,10 +69,6 @@ public class Post {
 
 	public Instant getCreatedAt() {
 		return createdAt;
-	}
-
-	public void setCreatedAt(Instant createdAt) {
-		this.createdAt = createdAt;
 	}
 
 	@Override
