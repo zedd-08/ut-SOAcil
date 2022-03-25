@@ -1,10 +1,12 @@
 package com.ut.soacil.postservice.controller;
 
+import com.ut.soacil.postservice.models.Notification;
 import com.ut.soacil.postservice.models.Post;
 import com.ut.soacil.postservice.models.Auth0;
 import com.ut.soacil.postservice.repository.PostRepository;
 import com.ut.soacil.postservice.utils.AuthenticateUser;
 
+import com.ut.soacil.postservice.utils.NotificationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,6 +95,9 @@ public class PostController {
 		}
 		post.setLikes(post.getLikes() + 1);
 		postRepository.save(post);
+
+		Notification notification = new Notification(userId, "Someone liked your post!");
+		NotificationHandler.sendNotification(notification);
 		return ResponseEntity.status(HttpStatus.OK).body("Liked post");
 	}
 

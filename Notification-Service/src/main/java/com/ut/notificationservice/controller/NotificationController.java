@@ -41,7 +41,7 @@ public class NotificationController {
                                     schema = @Schema(implementation = Notification.class))
                         })
         })
-    public ResponseEntity<List<NotificationResponse>> findByUserId(@PathVariable(value = "user-id") String userId) {
+    public ResponseEntity<List<NotificationResponse>> findByUserId(@PathVariable(value = "user-id") Integer userId) {
         return ResponseEntity.ok(notificationMapper.toNotificationResponses(notificationService.findNotificationsByUserID(userId)));
     }
 

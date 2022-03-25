@@ -13,5 +13,5 @@ public interface NotificationRepository extends CrudRepository<Notification, Int
     @Query("SELECT n " +
             "FROM Notification n " +
             "WHERE n.user_id = :user_id ORDER BY n.created_at DESC")
-    List<Notification> findNotificationsByUser(@Param("user_id") String user_id);
+    List<Notification> findNotificationsByUser(@Param("user_id") Integer user_id);
 }

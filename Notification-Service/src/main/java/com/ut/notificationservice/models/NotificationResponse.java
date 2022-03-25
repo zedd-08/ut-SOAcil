@@ -16,7 +16,7 @@ public class NotificationResponse {
 
     @JsonProperty("user_id")
     @NotNull
-    private String user_id;
+    private Integer user_id;
 
     @JsonProperty("description")
     @NotBlank
@@ -27,7 +27,7 @@ public class NotificationResponse {
     @PastOrPresent
     private Instant created_at;
 
-    public NotificationResponse(Integer id, @NotBlank String user_id, @NotBlank String description, @NotNull @PastOrPresent Instant created_at) {
+    public NotificationResponse(Integer id, @NotNull Integer user_id, @NotBlank String description, @NotNull @PastOrPresent Instant created_at) {
         this.id = id;
         this.user_id = user_id;
         this.description = description;

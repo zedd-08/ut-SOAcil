@@ -15,7 +15,7 @@ public class NotificationService {
     @Autowired RestTemplate restTemplate;
 
     @Transactional(readOnly = true)
-    public List<Notification> findNotificationsByUserID(String user_id) {
+    public List<Notification> findNotificationsByUserID(Integer user_id) {
         return notificationRepository.findNotificationsByUser(user_id);
     }
 
