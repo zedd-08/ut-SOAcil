@@ -82,8 +82,8 @@ public class Post {
 	@Override
 	public String toString() {
 		return "Post {" +
-				"content=\'" + content +
-				"\'', createdAt=" + createdAt +
+				"content='" + content +
+				"', createdAt=" + createdAt +
 				", id=" + id +
 				", likes=" + likes +
 				", userId=" + userId + "}";
