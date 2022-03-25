@@ -17,6 +17,7 @@ public class NotificationReceiver implements RabbitListenerConfigurer {
 
     @RabbitListener(queues = "${spring.rabbitmq.queue}")
     public void receiveMessage(Notification notification) {
+        System.out.println(notification.toString());
         try {
             notificationService.save(notification);
         } catch (Exception ignored) {}

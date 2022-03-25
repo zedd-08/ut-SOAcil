@@ -1,5 +1,7 @@
 package com.ut.notificationservice.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -55,7 +57,10 @@ public class RabbitMQConfig {
 
     @Bean
     public MessageConverter jsonMessageConverter() {
-        return new Jackson2JsonMessageConverter();
+        ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+        JavaTimeModule module = new JavaTimeModule();
+        mapper.registerModule(module);
+        return new Jackson2JsonMessageConverter(mapper);
     }
 
     @Bean

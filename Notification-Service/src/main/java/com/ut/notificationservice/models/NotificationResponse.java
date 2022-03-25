@@ -25,22 +25,22 @@ public class NotificationResponse {
     @JsonProperty("created_at")
     @NotNull
     @PastOrPresent
-    private Instant createdAt;
+    private Instant created_at;
 
-    public NotificationResponse(Integer id, @NotBlank String user_id, @NotBlank String description, @NotNull @PastOrPresent Instant createdAt) {
+    public NotificationResponse(Integer id, @NotBlank String user_id, @NotBlank String description, @NotNull @PastOrPresent Instant created_at) {
         this.id = id;
         this.user_id = user_id;
         this.description = description;
-        this.createdAt = createdAt;
+        this.created_at = created_at;
     }
 
     @Override
     public String toString() {
         return "Notification {" +
                 "id=" + id +
-                ", author_id='" + user_id + '\'' +
+                ", user_id='" + user_id + '\'' +
                 ", description='" + description + '\'' +
-                ", createdAt=" + createdAt +
+                ", created_at=" + created_at +
                 '}';
     }
 }

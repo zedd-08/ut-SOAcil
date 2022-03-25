@@ -1,11 +1,13 @@
 package com.ut.notificationservice.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
@@ -28,7 +30,9 @@ public class Notification implements Serializable {
     @JsonProperty(value = "description", required = true)
     private String description;
 
+    @NotNull
     @CreationTimestamp
+    @JsonProperty(value = "created_at")
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant created_at = Instant.now();
 
@@ -55,17 +59,21 @@ public class Notification implements Serializable {
         this.description = description;
     }
 
-    public Instant getCreatedAt() {
+    public Instant getCreated_at() {
         return created_at;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.created_at = createdAt;
+    public void setCreated_at(Instant created_at) {
+        this.created_at = created_at;
     }
 
-    public String getAuthor() { return user_id; }
+    public String getUser_id() {
+        return user_id;
+    }
 
-    public void setAuthor(String user_id) { this.user_id = user_id; }
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -92,9 +100,9 @@ public class Notification implements Serializable {
     public String toString() {
         return "Notification {" +
                 "id=" + id +
-                ", author_id='" + user_id + '\'' +
+                ", user_id='" + user_id + '\'' +
                 ", description='" + description + '\'' +
-                ", createdAt=" + created_at +
+                ", created_at=" + created_at +
                 '}';
     }
 }

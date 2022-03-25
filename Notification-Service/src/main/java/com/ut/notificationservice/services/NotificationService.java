@@ -16,7 +16,7 @@ public class NotificationService {
 
     @Transactional(readOnly = true)
     public List<Notification> findNotificationsByUserID(String user_id) {
-        return notificationRepository.findNotificationsByAuthor(user_id);
+        return notificationRepository.findNotificationsByUser(user_id);
     }
 
     @Transactional
