@@ -41,7 +41,7 @@ public class User {
 
 	@Column(name = "friends", nullable = false)
 	@JsonProperty(value = "friends")
-	private ArrayList<User> friends;
+	private ArrayList<Integer> friends;
 
 	@CreationTimestamp
 	@Column(name = "joined", updatable = false, nullable = false)

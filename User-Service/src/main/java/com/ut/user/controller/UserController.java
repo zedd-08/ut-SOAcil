@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class UserController {
-	@Autowired private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 	@GetMapping(path = "/{userId}/friends")
-	public @ResponseBody Iterable<User> getUserFriends(@PathVariable("userId") Integer userId) {
+	public @ResponseBody Iterable<Integer> getUserFriends(@PathVariable("userId") Integer userId) {
 		User user = userRepository.findById(userId).orElse(null);
 		return user.getFriends();
 	}
@@ -30,8 +31,8 @@ public class UserController {
 		userToAdd.setFirstName(user.getFirstName());
 		userToAdd.setLastName(user.getLastName());
 		userToAdd.setPassword(user.getPassword());
-		userToAdd.setFriends(new ArrayList<User>());
+		userToAdd.setFriends(new ArrayList<Integer>());
 		userRepository.save(userToAdd);
-		return userToAdd;		
+		return userToAdd;
 	}
 }

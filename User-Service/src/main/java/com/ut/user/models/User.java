@@ -41,7 +41,7 @@ public class User {
 
 	@Column(name = "friends", nullable = false)
 	@JsonProperty(value = "friends")
-	private ArrayList<User> friends;
+	private ArrayList<Integer> friends;
 
 	@CreationTimestamp
 	@Column(name = "joined", updatable = false, nullable = false)
@@ -84,11 +84,11 @@ public class User {
 		this.bio = bio;
 	}
 
-	public ArrayList<User> getFriends() {
+	public ArrayList<Integer> getFriends() {
 		return friends;
 	}
 
-	public void setFriends(ArrayList<User> friends) {
+	public void setFriends(ArrayList<Integer> friends) {
 		this.friends = friends;
 	}
 
