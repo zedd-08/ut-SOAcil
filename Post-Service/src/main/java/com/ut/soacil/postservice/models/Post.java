@@ -26,9 +26,9 @@ public class Post {
 	@JsonProperty(value = "content")
 	private String content;
 
-	@Column(name = "userId", nullable = false)
-	@JsonProperty(value = "userId")
-	private String userId;
+	@Column(name = "author", nullable = false)
+	@JsonProperty(value = "author")
+	private Integer author;
 
 	@Column(name = "likes", nullable = false)
 	@JsonProperty(value = "likes")
@@ -51,12 +51,12 @@ public class Post {
 		this.content = content;
 	}
 
-	public String getUserId() {
-		return userId;
+	public Integer getUserId() {
+		return author;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserId(Integer author) {
+		this.author = author;
 	}
 
 	public Integer getLikes() {
@@ -78,7 +78,7 @@ public class Post {
 				"', createdAt=" + createdAt +
 				", id=" + id +
 				", likes=" + likes +
-				", userId=" + userId + "}";
+				", userId=" + author + "}";
 	}
 
 }
