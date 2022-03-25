@@ -43,10 +43,6 @@ public class Post {
 		return id;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public String getContent() {
 		return content;
 	}
@@ -75,15 +71,11 @@ public class Post {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Instant createdAt) {
-		this.createdAt = createdAt;
-	}
-
 	@Override
 	public String toString() {
 		return "Post {" +
-				"content=\'" + content +
-				"\'', createdAt=" + createdAt +
+				"content='" + content +
+				"', createdAt=" + createdAt +
 				", id=" + id +
 				", likes=" + likes +
 				", userId=" + userId + "}";

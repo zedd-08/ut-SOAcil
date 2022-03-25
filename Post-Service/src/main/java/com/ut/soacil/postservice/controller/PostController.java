@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(path = "/api/posts")
+@RequestMapping(path = "/posts")
 public class PostController {
 	@Autowired
 	private PostRepository postRepository;
@@ -25,6 +25,15 @@ public class PostController {
 	@GetMapping(path = "/all")
 	public @ResponseBody Iterable<Post> getAllPosts() {
 		return postRepository.findAll();
+	}
+
+	@GetMapping(path = "/{postId}")
+	public @ResponseBody ResponseEntity<Post> getPostById(@PathVariable("postId") Integer postId) {
+		Post post = postRepository.findById(postId).orElse(null);
+		if (null == post) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(post);
 	}
 
 	@PostMapping(path = "/add")
