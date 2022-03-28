@@ -10,15 +10,17 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
+@Data
 @Entity
 @Table(name = "authtoken")
 public class Auth0 {
 	@Id
-	@Column(name = "id", nullable = false)
-	@JsonProperty(value = "userId")
-	private Integer id;
+	@Column(name = "user_id", nullable = false)
+	@JsonProperty(value = "user_id")
+	private Integer user_id;
 
 	@Column(name = "auth_token", nullable = false)
 	@JsonProperty(value = "auth_token")
@@ -31,12 +33,12 @@ public class Auth0 {
 
 	private static final String ALL_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-	public Integer getId() {
-		return id;
+	public Integer getUser_id() {
+		return user_id;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setUser_id(Integer user_id) {
+		this.user_id = user_id;
 	}
 
 	public String getAuth_token() {

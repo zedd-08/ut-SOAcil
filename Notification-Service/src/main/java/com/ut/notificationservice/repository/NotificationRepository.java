@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Repository("mainNotifRepository")
 public interface NotificationRepository extends CrudRepository<Notification, Integer> {
     @Query("SELECT n " +
             "FROM Notification n " +

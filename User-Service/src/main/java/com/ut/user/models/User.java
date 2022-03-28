@@ -1,14 +1,9 @@
 package com.ut.user.models;
 
 import java.time.Instant;
-import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,9 +14,9 @@ import org.hibernate.annotations.CreationTimestamp;
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", nullable = false)
-	@JsonProperty(value = "userId")
-	private Integer id;
+	@Column(name = "user_id", nullable = false)
+	@JsonProperty(value = "user_id")
+	private Integer user_id;
 
 	@Column(name = "firstName", nullable = false)
 	@JsonProperty(value = "firstName")
@@ -39,17 +34,18 @@ public class User {
 	@JsonProperty(value = "bio")
 	private String bio;
 
+	@ElementCollection
 	@Column(name = "friends", nullable = false)
 	@JsonProperty(value = "friends")
-	private ArrayList<Integer> friends;
+	private List<Integer> friends;
 
 	@CreationTimestamp
 	@Column(name = "joined", updatable = false, nullable = false)
 	@JsonProperty("joined")
 	private Instant joined = Instant.now();
 
-	public Integer getId() {
-		return id;
+	public Integer getUser_id() {
+		return user_id;
 	}
 
 	public String getFirstName() {
@@ -84,11 +80,11 @@ public class User {
 		this.bio = bio;
 	}
 
-	public ArrayList<Integer> getFriends() {
+	public List<Integer> getFriends() {
 		return friends;
 	}
 
-	public void setFriends(ArrayList<Integer> friends) {
+	public void setFriends(List<Integer> friends) {
 		this.friends = friends;
 	}
 

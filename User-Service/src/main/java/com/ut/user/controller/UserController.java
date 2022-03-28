@@ -1,19 +1,19 @@
 package com.ut.user.controller;
 
-import java.util.ArrayList;
-
 import com.ut.user.models.User;
 import com.ut.user.repository.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.ArrayList;
+import java.util.Collections;
+
+@CrossOrigin("*")
+@RestController
+@RequestMapping(
+		path = {"/v1/users"},
+		produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 	@Autowired
 	private UserRepository userRepository;
@@ -21,7 +21,7 @@ public class UserController {
 	@GetMapping(path = "/{userId}/friends")
 	public @ResponseBody Iterable<Integer> getUserFriends(@PathVariable("userId") Integer userId) {
 		User user = userRepository.findById(userId).orElse(null);
-		return user.getFriends();
+		return user == null ? Collections.emptyList() : user.getFriends();
 	}
 
 	@PostMapping(path = "/add")
@@ -31,7 +31,7 @@ public class UserController {
 		userToAdd.setFirstName(user.getFirstName());
 		userToAdd.setLastName(user.getLastName());
 		userToAdd.setPassword(user.getPassword());
-		userToAdd.setFriends(new ArrayList<Integer>());
+		userToAdd.setFriends(new ArrayList<>());
 		userRepository.save(userToAdd);
 		return userToAdd;
 	}

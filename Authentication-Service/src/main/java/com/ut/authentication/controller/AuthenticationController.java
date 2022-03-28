@@ -1,68 +1,105 @@
 package com.ut.authentication.controller;
 
+import com.ut.authentication.models.Auth0;
+import com.ut.authentication.models.UserResponse;
+import com.ut.authentication.repository.Auth0Repository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
 import java.time.Duration;
 import java.time.Instant;
 
-import com.ut.authentication.models.Auth0;
-import com.ut.authentication.models.User;
-import com.ut.authentication.repository.Auth0Repository;
-import com.ut.authentication.repository.UserRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-@Controller
+@CrossOrigin("*")
+@RestController
+@RequestMapping(
+		path = {"/v1/authentication"},
+		produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 	@Autowired
 	private Auth0Repository authRepository;
-	@Autowired
-	private UserRepository userRepository;
 
 	@PostMapping(path = "/getauthtoken")
-	public @ResponseBody Auth0 getNewAuthToken(@RequestBody User user) {
+	@Operation(summary = "Generate an authentication token for a user.")
+	@ApiResponse(
+			responseCode = "201",
+			content = {
+					@Content(
+							mediaType = MediaType.APPLICATION_JSON_VALUE,
+							schema = @Schema(implementation = Auth0.class)
+					)
+			})
+	public @ResponseBody Auth0 getNewAuthToken(@Validated @RequestBody UserResponse userResponse) {
 		Auth0 auth = new Auth0();
 		auth.setAuth_token();
-		auth.setId(user.getId());
+		auth.setUser_id(userResponse.getUser_id());
 		authRepository.save(auth);
 		return auth;
 	}
 
 	@PostMapping(path = "/isauthvalid")
-	public @ResponseBody Boolean isAuthValid(@RequestBody Auth0 auth0) {
-		Auth0 auth = authRepository.findById(auth0.getId()).orElse(null);
+	@Operation(summary = "Check the validity of authentication token for a user.")
+	@ApiResponse(
+			responseCode = "201",
+			content = {
+					@Content(
+							mediaType = MediaType.APPLICATION_JSON_VALUE,
+							schema = @Schema(implementation = Boolean.class)
+					)
+			})
+	public @ResponseBody Boolean isAuthValid(@Validated @RequestBody Auth0 auth0) {
+		Auth0 auth = authRepository.findById(auth0.getUser_id()).orElse(null);
 		if (auth == null)
 			return false;
 		if (!auth.getAuth_token().equals(auth0.getAuth_token()))
 			return false;
 		Instant now = Instant.now();
 		Duration dur = Duration.between(auth.getCreated(), now);
-		return dur.toMinutes() > 5 ? false : true;
+		return dur.toMinutes() <= 5;
 	}
 
 	@PostMapping(path = "/login")
-	public @ResponseBody Auth0 login(@RequestBody User user) {
+	@Operation(summary = "Endpoint for logging in the user.")
+	@ApiResponse(
+			responseCode = "201",
+			content = {
+					@Content(
+							mediaType = MediaType.APPLICATION_JSON_VALUE,
+							schema = @Schema(implementation = Auth0.class)
+					)
+			})
+	public @ResponseBody Auth0 login(@Validated @RequestBody UserResponse userResponse) {
 		Auth0 auth = new Auth0();
-		if (isPasswordValid(user)) {
+		if (isPasswordValid(userResponse)) {
 			auth.setAuth_token();
 		}
-		auth.setId(user.getId());
+		auth.setUser_id(userResponse.getUser_id());
 		return auth;
 	}
 
-	private boolean isPasswordValid(User user) {
-		User actual = userRepository.findById(user.getId()).orElse(null);
-		return actual.getPassword().equals(user.getPassword()) ? true : false;
+	private boolean isPasswordValid(UserResponse userResponse) {
+		UserResponse actual = authRepository.findUserById(userResponse.getUser_id());
+		return actual != null && actual.getPassword().equals(userResponse.getPassword());
 	}
 
 	@PostMapping(path = "/logout")
-	public @ResponseBody Boolean logout(@RequestBody Auth0 auth) {
-		Auth0 auth0 = authRepository.findById(auth.getId()).orElse(null);
-		if (null != auth0) {
-			authRepository.deleteById(auth.getId());
-		}
+	@Operation(summary = "Endpoint for logging out the user.")
+	@ApiResponse(
+			responseCode = "201",
+			content = {
+					@Content(
+							mediaType = MediaType.APPLICATION_JSON_VALUE,
+							schema = @Schema(implementation = Boolean.class)
+					)
+			})
+	public @ResponseBody Boolean logout(@Validated @RequestBody UserResponse userResponse) {
+		UserResponse actualUser = authRepository.findUserById(userResponse.getUser_id());
+		authRepository.findById(actualUser.getUser_id()).ifPresent(auth0 -> authRepository.deleteById(auth0.getUser_id()));
 		return true;
 	}
 }
