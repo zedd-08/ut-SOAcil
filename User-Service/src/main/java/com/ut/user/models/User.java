@@ -1,47 +1,50 @@
 package com.ut.user.models;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
+@Data
 @Entity
 @Table(name = "users")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "user_id", nullable = false)
-	@JsonProperty(value = "user_id")
+	@JsonProperty(value = "user_id", access = JsonProperty.Access.READ_ONLY)
 	private Integer user_id;
 
 	@Column(name = "firstName", nullable = false)
-	@JsonProperty(value = "firstName")
+	@JsonProperty(value = "firstName", required = true)
 	private String firstName;
 
 	@Column(name = "lastName", nullable = false)
-	@JsonProperty(value = "lastName")
+	@JsonProperty(value = "lastName", required = true)
 	private String lastName;
 
 	@Column(name = "password", nullable = false)
-	@JsonProperty(value = "password")
+	@JsonProperty(value = "password", required = true)
 	private String password;
 
 	@Column(name = "bio", nullable = false)
 	@JsonProperty(value = "bio")
-	private String bio;
+	private String bio = "";
 
 	@ElementCollection
 	@Column(name = "friends", nullable = false)
-	@JsonProperty(value = "friends")
-	private List<Integer> friends;
+	@JsonProperty(value = "friends", access = JsonProperty.Access.READ_ONLY)
+	private List<Integer> friends = new ArrayList<>();
 
 	@CreationTimestamp
 	@Column(name = "joined", updatable = false, nullable = false)
-	@JsonProperty("joined")
+	@JsonProperty(value = "joined", access = JsonProperty.Access.READ_ONLY)
 	private Instant joined = Instant.now();
 
 	public Integer getUser_id() {

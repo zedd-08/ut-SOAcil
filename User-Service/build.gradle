@@ -22,7 +22,8 @@ dependencies {
 	implementation 'io.swagger.core.v3:swagger-annotations:2.1.13'
 	implementation 'io.swagger.core.v3:swagger-jaxrs2:2.1.13'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
-	runtimeOnly 'mysql:mysql-connector-java'
+    implementation 'org.projectlombok:lombok:1.18.20'
+    runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

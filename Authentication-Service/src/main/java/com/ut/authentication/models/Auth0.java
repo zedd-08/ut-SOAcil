@@ -1,12 +1,12 @@
 package com.ut.authentication.models;
 
+import java.io.Serializable;
 import java.security.SecureRandom;
 import java.time.Instant;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -16,20 +16,23 @@ import org.hibernate.annotations.CreationTimestamp;
 @Data
 @Entity
 @Table(name = "authtoken")
-public class Auth0 {
+public class Auth0 implements Serializable {
 	@Id
+	@NotNull
 	@Column(name = "user_id", nullable = false)
-	@JsonProperty(value = "user_id")
+	@JsonProperty(value = "user_id", required = true)
 	private Integer user_id;
 
-	@Column(name = "auth_token", nullable = false)
-	@JsonProperty(value = "auth_token")
+	@NotEmpty
+	@Column(name = "auth_token")
+	@JsonProperty(value = "auth_token", required = true)
 	private String auth_token;
 
+	@NotNull
 	@CreationTimestamp
-	@Column(name = "created", updatable = false, nullable = false)
-	@JsonProperty("created")
-	private Instant created = Instant.now();
+	@Column(name = "created_at")
+	@JsonProperty(value = "created_at", access = JsonProperty.Access.READ_ONLY)
+	private Instant created_at = Instant.now();
 
 	private static final String ALL_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -55,7 +58,7 @@ public class Auth0 {
 		auth_token = sb.toString();
 	}
 
-	public Instant getCreated() {
-		return created;
+	public Instant getCreated_at() {
+		return created_at;
 	}
 }

@@ -17,9 +17,11 @@ import java.util.Objects;
 public class Notification implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique = true, nullable = false)
+    @JsonProperty(value = "id", access = JsonProperty.Access.READ_ONLY)
     private Integer id;
 
-    @Column(name= "user_id", unique = true)
+    @Column(name= "user_id")
     @NotNull
     @JsonProperty(value = "user_id", required = true)
     private Integer user_id;
@@ -29,10 +31,10 @@ public class Notification implements Serializable {
     @JsonProperty(value = "description", required = true)
     private String description;
 
-    @NotNull
     @CreationTimestamp
-    @JsonProperty(value = "created_at")
-    @Column(name = "created_at", updatable = false, nullable = false)
+    @Column(name = "created_at", updatable = false)
+    @NotNull
+    @JsonProperty(value = "created_at", access = JsonProperty.Access.READ_ONLY)
     private Instant created_at = Instant.now();
 
     public Notification() { }

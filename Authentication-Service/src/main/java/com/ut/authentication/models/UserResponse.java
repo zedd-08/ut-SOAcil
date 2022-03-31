@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
@@ -15,11 +17,13 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "users")
 public class UserResponse implements Serializable {
+	@NotNull
 	@Id
-	@Column(name = "user_id")
+	@Column(name = "user_id", nullable = false)
 	@JsonProperty(value = "user_id")
 	private Integer user_id;
 
+	@NotEmpty
 	@Column(name = "password")
 	@JsonProperty(value = "password")
 	private String password;

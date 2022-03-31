@@ -1,11 +1,17 @@
 package com.ut.soacil.postservice.controller;
 
-import com.ut.soacil.postservice.models.Auth0;
-import com.ut.soacil.postservice.models.Notification;
+import com.ut.soacil.postservice.models.Auth0Body;
+import com.ut.soacil.postservice.models.NotificationBody;
 import com.ut.soacil.postservice.models.Post;
 import com.ut.soacil.postservice.repository.PostRepository;
 import com.ut.soacil.postservice.utils.AuthenticateUser;
 import com.ut.soacil.postservice.utils.NotificationHandler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,12 +28,36 @@ public class PostController {
 	private PostRepository postRepository;
 
 	@GetMapping(path = "/all")
-	public @ResponseBody Iterable<Post> getAllPosts() {
-		return postRepository.findAll();
+	@Operation(summary = "Get all posts.")
+	@ApiResponses(
+			value = {
+					@ApiResponse(
+							responseCode = "200",
+							content = {
+									@Content(
+											mediaType = MediaType.APPLICATION_JSON_VALUE,
+											array = @ArraySchema(schema = @Schema(implementation = Post.class)))
+							}),
+					@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+			})
+	public @ResponseBody ResponseEntity<Iterable<Post>> getAllPosts() {
+		return ResponseEntity.ok(postRepository.findAll());
 	}
 
-	@GetMapping(path = "/{postId}")
-	public @ResponseBody ResponseEntity<Post> getPostById(@PathVariable("postId") Integer postId) {
+	@GetMapping(path = "/{post_id}")
+	@Operation(summary = "Get post by id.")
+	@ApiResponses(
+			value = {
+					@ApiResponse(
+							responseCode = "200",
+							content = {
+									@Content(
+											mediaType = MediaType.APPLICATION_JSON_VALUE,
+											schema = @Schema(implementation = Post.class))
+							}),
+					@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+			})
+	public @ResponseBody ResponseEntity<Post> getPostById(@PathVariable("post_id") Integer postId) {
 		Post post = postRepository.findById(postId).orElse(null);
 		if (null == post) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -36,33 +66,57 @@ public class PostController {
 	}
 
 	@PostMapping(path = "/add")
+	@Operation(summary = "Create and add a new post.")
+	@ApiResponses(
+			value = {
+					@ApiResponse(
+							responseCode = "200",
+							content = {
+									@Content(
+											mediaType = MediaType.APPLICATION_JSON_VALUE,
+											schema = @Schema(implementation = Post.class))
+							}),
+					@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+			})
 	public @ResponseBody ResponseEntity<Post> addNewPost(@RequestBody Post postReq,
-			@RequestHeader("auth_token") String authToken, @RequestHeader("userId") Integer userId) {
+			@RequestHeader("auth_token") String authToken, @RequestHeader("user_id") Integer userId) {
 
-		Auth0 auth0 = new Auth0();
-		auth0.setId(userId);
-		auth0.setAuth_token(authToken);
-		if (!AuthenticateUser.isAuthValid(auth0)) {
+		Auth0Body auth0Body = new Auth0Body();
+		auth0Body.setUser_id(userId);
+		auth0Body.setAuth_token(authToken);
+		if (!AuthenticateUser.isAuthValid(auth0Body)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
 		Post post = new Post();
 		post.setContent(postReq.getContent());
-		post.setUserId(userId);
+		post.setUser_id(userId);
 		post.setLikes(0);
 
 		postRepository.save(post);
 		return ResponseEntity.status(HttpStatus.OK).body(post);
 	}
 
-	@DeleteMapping(path = "/{postId}")
-	public @ResponseBody ResponseEntity<String> deletePost(@PathVariable("postId") Integer postId,
-			@RequestHeader("auth_token") String authToken, @RequestHeader("userId") Integer userId) {
+	@DeleteMapping(path = "/{post_id}")
+	@Operation(summary = "Get post by id.")
+	@ApiResponses(
+			value = {
+					@ApiResponse(
+							responseCode = "200",
+							content = {
+									@Content(
+											mediaType = MediaType.APPLICATION_JSON_VALUE,
+											schema = @Schema(implementation = String.class))
+							}),
+					@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+			})
+	public @ResponseBody ResponseEntity<String> deletePost(@PathVariable("post_id") Integer postId,
+			@RequestHeader("auth_token") String authToken, @RequestHeader("user_id") Integer userId) {
 
-		Auth0 auth0 = new Auth0();
-		auth0.setId(userId);
-		auth0.setAuth_token(authToken);
-		if (!AuthenticateUser.isAuthValid(auth0)) {
+		Auth0Body auth0Body = new Auth0Body();
+		auth0Body.setUser_id(userId);
+		auth0Body.setAuth_token(authToken);
+		if (!AuthenticateUser.isAuthValid(auth0Body)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
@@ -74,14 +128,26 @@ public class PostController {
 		return ResponseEntity.status(HttpStatus.OK).body("Deleted post");
 	}
 
-	@PutMapping(path = "/{postId}/like")
-	public @ResponseBody ResponseEntity<String> likePost(@PathVariable("postId") Integer postId,
-			@RequestHeader("auth_token") String authToken, @RequestHeader("userId") Integer userId) {
+	@PutMapping(path = "/{post_id}/like")
+	@Operation(summary = "Adds a like to the given post from the user specified on the message body.")
+	@ApiResponses(
+			value = {
+					@ApiResponse(
+							responseCode = "200",
+							content = {
+									@Content(
+											mediaType = MediaType.APPLICATION_JSON_VALUE,
+											schema = @Schema(implementation = String.class))
+							}),
+					@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+			})
+	public @ResponseBody ResponseEntity<String> likePost(@PathVariable("post_id") Integer postId,
+			@RequestHeader("auth_token") String authToken, @RequestHeader("user_id") Integer userId) {
 
-		Auth0 auth0 = new Auth0();
-		auth0.setId(userId);
-		auth0.setAuth_token(authToken);
-		if (!AuthenticateUser.isAuthValid(auth0)) {
+		Auth0Body auth0Body = new Auth0Body();
+		auth0Body.setUser_id(userId);
+		auth0Body.setAuth_token(authToken);
+		if (!AuthenticateUser.isAuthValid(auth0Body)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
@@ -92,20 +158,32 @@ public class PostController {
 		post.setLikes(post.getLikes() + 1);
 		postRepository.save(post);
 
-		Notification notification = new Notification(userId, "Someone liked your post!");
-		NotificationHandler.sendNotification(notification);
+		NotificationBody notificationBody = new NotificationBody(userId, "Someone liked your post!");
+		NotificationHandler.sendNotification(notificationBody);
 		return ResponseEntity.status(HttpStatus.OK).body("Liked post");
 	}
 
-	@PutMapping(path = "/{postId}/update")
-	public @ResponseBody ResponseEntity<String> updatePost(@PathVariable("postId") Integer postId,
+	@PutMapping(path = "/{post_id}/update")
+	@Operation(summary = "Updates an edited post.")
+	@ApiResponses(
+			value = {
+					@ApiResponse(
+							responseCode = "200",
+							content = {
+									@Content(
+											mediaType = MediaType.APPLICATION_JSON_VALUE,
+											schema = @Schema(implementation = String.class))
+							}),
+					@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+			})
+	public @ResponseBody ResponseEntity<String> updatePost(@PathVariable("post_id") Integer postId,
 			@RequestBody Post postReq, @RequestHeader("auth_token") String authToken,
-			@RequestHeader("userId") Integer userId) {
+			@RequestHeader("user_id") Integer userId) {
 
-		Auth0 auth0 = new Auth0();
-		auth0.setId(userId);
-		auth0.setAuth_token(authToken);
-		if (!AuthenticateUser.isAuthValid(auth0)) {
+		Auth0Body auth0Body = new Auth0Body();
+		auth0Body.setUser_id(userId);
+		auth0Body.setAuth_token(authToken);
+		if (!AuthenticateUser.isAuthValid(auth0Body)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
