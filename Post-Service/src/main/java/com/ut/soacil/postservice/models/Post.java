@@ -2,18 +2,21 @@ package com.ut.soacil.postservice.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.time.Instant;
 
 @Data
 @Entity
 @Table(name = "posts")
+@Getter
+@Setter
 public class Post implements Serializable {
 	@NotNull
 	@Id
@@ -43,38 +46,6 @@ public class Post implements Serializable {
 	@JsonProperty(value = "created_at", access = JsonProperty.Access.READ_ONLY)
 	private Instant created_at = Instant.now();
 
-	public Integer getPost_id() {
-		return post_id;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public Integer getUser_id() {
-		return user_id;
-	}
-
-	public void setUser_id(Integer user_id) {
-		this.user_id = user_id;
-	}
-
-	public Integer getLikes() {
-		return likes;
-	}
-
-	public void setLikes(Integer likes) {
-		this.likes = likes;
-	}
-
-	public Instant getCreated_at() {
-		return created_at;
-	}
-
 	@Override
 	public String toString() {
 		return "Post {" +
@@ -84,5 +55,4 @@ public class Post implements Serializable {
 				", likes=" + likes +
 				", user_id=" + user_id + "}";
 	}
-
 }

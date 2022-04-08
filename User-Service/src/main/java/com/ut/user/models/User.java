@@ -9,17 +9,25 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Data
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "user_id", nullable = false)
 	@JsonProperty(value = "user_id", access = JsonProperty.Access.READ_ONLY)
 	private Integer user_id;
+
+	@Column(name = "user_handle", nullable = false, unique = true)
+	@JsonProperty(value = "user_handle")
+	private String userHandle;
 
 	@Column(name = "firstName", nullable = false)
 	@JsonProperty(value = "firstName", required = true)
@@ -46,52 +54,4 @@ public class User {
 	@Column(name = "joined", updatable = false, nullable = false)
 	@JsonProperty(value = "joined", access = JsonProperty.Access.READ_ONLY)
 	private Instant joined = Instant.now();
-
-	public Integer getUser_id() {
-		return user_id;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getBio() {
-		return bio;
-	}
-
-	public void setBio(String bio) {
-		this.bio = bio;
-	}
-
-	public List<Integer> getFriends() {
-		return friends;
-	}
-
-	public void setFriends(List<Integer> friends) {
-		this.friends = friends;
-	}
-
-	public Instant getJoined() {
-		return joined;
-	}
 }

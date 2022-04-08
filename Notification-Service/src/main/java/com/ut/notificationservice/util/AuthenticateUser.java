@@ -1,6 +1,6 @@
-package com.ut.soacil.postservice.utils;
+package com.ut.notificationservice.util;
 
-import com.ut.soacil.postservice.models.Auth0Body;
+import com.ut.notificationservice.models.Auth0Body;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;

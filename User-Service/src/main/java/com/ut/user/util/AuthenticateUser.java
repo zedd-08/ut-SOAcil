@@ -1,6 +1,7 @@
-package com.ut.soacil.postservice.utils;
+package com.ut.user.util;
 
-import com.ut.soacil.postservice.models.Auth0Body;
+import com.ut.user.models.Auth0Body;
+import com.ut.user.models.User;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -10,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 public class AuthenticateUser {
 	private static final String AUTH_SERVICE_CHECK_ENDPOINT = "http://localhost:9090/v1/auth-service";
 	private static final String AUTH_SERVICE_IS_VALID = "/isauthvalid";
+	private static final String AUTH_SERVICE_LOGIN = "/login";
 
 	public static boolean isAuthValid(Auth0Body auth0Body) {
 		HttpEntity<Auth0Body> httpEntity = new HttpEntity<>(auth0Body);
@@ -17,5 +19,13 @@ public class AuthenticateUser {
 				AUTH_SERVICE_CHECK_ENDPOINT + AUTH_SERVICE_IS_VALID, HttpMethod.POST,
 				httpEntity, Boolean.class);
 		return Boolean.TRUE.equals(isAuthValid.getBody());
+	}
+
+	public static ResponseEntity<Auth0Body> loginUser(User user) {
+		HttpEntity<User> httpEntity = new HttpEntity<>(user);
+		ResponseEntity<Auth0Body> auth0 = new RestTemplate().exchange(AUTH_SERVICE_CHECK_ENDPOINT + AUTH_SERVICE_LOGIN,
+				HttpMethod.POST,
+				httpEntity, Auth0Body.class);
+		return auth0;
 	}
 }

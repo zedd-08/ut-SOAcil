@@ -1,6 +1,7 @@
-package com.ut.soacil.postservice.models;
+package com.ut.notificationservice.models;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,4 +19,7 @@ public class Auth0Body implements Serializable {
 
 	@JsonProperty(value = "auth_token")
 	private String auth_token;
+
+	@JsonProperty(value = "created_at")
+	private Instant created_at;
 }

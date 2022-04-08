@@ -20,64 +20,48 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping(
-		path = {"/v1/posts"},
-		produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = { "/v1/post-service" }, produces = MediaType.APPLICATION_JSON_VALUE)
 public class PostController {
 	@Autowired
 	private PostRepository postRepository;
 
 	@GetMapping(path = "/all")
 	@Operation(summary = "Get all posts.")
-	@ApiResponses(
-			value = {
-					@ApiResponse(
-							responseCode = "200",
-							content = {
-									@Content(
-											mediaType = MediaType.APPLICATION_JSON_VALUE,
-											array = @ArraySchema(schema = @Schema(implementation = Post.class)))
-							}),
-					@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
-			})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {
+					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = Post.class)))
+			}),
+			@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+	})
 	public @ResponseBody ResponseEntity<Iterable<Post>> getAllPosts() {
 		return ResponseEntity.ok(postRepository.findAll());
 	}
 
 	@GetMapping(path = "/{post_id}")
 	@Operation(summary = "Get post by id.")
-	@ApiResponses(
-			value = {
-					@ApiResponse(
-							responseCode = "200",
-							content = {
-									@Content(
-											mediaType = MediaType.APPLICATION_JSON_VALUE,
-											schema = @Schema(implementation = Post.class))
-							}),
-					@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
-			})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {
+					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Post.class))
+			}),
+			@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+	})
 	public @ResponseBody ResponseEntity<Post> getPostById(@PathVariable("post_id") Integer postId) {
 		Post post = postRepository.findById(postId).orElse(null);
 		if (null == post) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(post);
+		return ResponseEntity.ok(post);
 	}
 
 	@PostMapping(path = "/add")
 	@Operation(summary = "Create and add a new post.")
-	@ApiResponses(
-			value = {
-					@ApiResponse(
-							responseCode = "200",
-							content = {
-									@Content(
-											mediaType = MediaType.APPLICATION_JSON_VALUE,
-											schema = @Schema(implementation = Post.class))
-							}),
-					@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
-			})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {
+					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Post.class))
+			}),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+	})
 	public @ResponseBody ResponseEntity<Post> addNewPost(@RequestBody Post postReq,
 			@RequestHeader("auth_token") String authToken, @RequestHeader("user_id") Integer userId) {
 
@@ -99,17 +83,13 @@ public class PostController {
 
 	@DeleteMapping(path = "/{post_id}")
 	@Operation(summary = "Get post by id.")
-	@ApiResponses(
-			value = {
-					@ApiResponse(
-							responseCode = "200",
-							content = {
-									@Content(
-											mediaType = MediaType.APPLICATION_JSON_VALUE,
-											schema = @Schema(implementation = String.class))
-							}),
-					@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
-			})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {
+					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = String.class))
+			}),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+	})
 	public @ResponseBody ResponseEntity<String> deletePost(@PathVariable("post_id") Integer postId,
 			@RequestHeader("auth_token") String authToken, @RequestHeader("user_id") Integer userId) {
 
@@ -130,17 +110,13 @@ public class PostController {
 
 	@PutMapping(path = "/{post_id}/like")
 	@Operation(summary = "Adds a like to the given post from the user specified on the message body.")
-	@ApiResponses(
-			value = {
-					@ApiResponse(
-							responseCode = "200",
-							content = {
-									@Content(
-											mediaType = MediaType.APPLICATION_JSON_VALUE,
-											schema = @Schema(implementation = String.class))
-							}),
-					@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
-			})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {
+					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = String.class))
+			}),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+	})
 	public @ResponseBody ResponseEntity<String> likePost(@PathVariable("post_id") Integer postId,
 			@RequestHeader("auth_token") String authToken, @RequestHeader("user_id") Integer userId) {
 
@@ -155,27 +131,24 @@ public class PostController {
 		if (null == post) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found!");
 		}
+		Integer to_user_id = post.getUser_id();
 		post.setLikes(post.getLikes() + 1);
 		postRepository.save(post);
 
-		NotificationBody notificationBody = new NotificationBody(userId, "Someone liked your post!");
+		NotificationBody notificationBody = new NotificationBody(to_user_id, userId, "Someone liked your post!");
 		NotificationHandler.sendNotification(notificationBody);
 		return ResponseEntity.status(HttpStatus.OK).body("Liked post");
 	}
 
 	@PutMapping(path = "/{post_id}/update")
 	@Operation(summary = "Updates an edited post.")
-	@ApiResponses(
-			value = {
-					@ApiResponse(
-							responseCode = "200",
-							content = {
-									@Content(
-											mediaType = MediaType.APPLICATION_JSON_VALUE,
-											schema = @Schema(implementation = String.class))
-							}),
-					@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
-			})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", content = {
+					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = String.class))
+			}),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+	})
 	public @ResponseBody ResponseEntity<String> updatePost(@PathVariable("post_id") Integer postId,
 			@RequestBody Post postReq, @RequestHeader("auth_token") String authToken,
 			@RequestHeader("user_id") Integer userId) {

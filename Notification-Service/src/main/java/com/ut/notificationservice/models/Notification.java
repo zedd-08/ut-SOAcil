@@ -2,6 +2,8 @@ package com.ut.notificationservice.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -14,6 +16,8 @@ import java.util.Objects;
 @Data
 @Entity
 @Table(name = "notifications")
+@Getter
+@Setter
 public class Notification implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,12 +25,17 @@ public class Notification implements Serializable {
     @JsonProperty(value = "id", access = JsonProperty.Access.READ_ONLY)
     private Integer id;
 
-    @Column(name= "user_id")
+    @Column(name = "user_id")
     @NotNull
     @JsonProperty(value = "user_id", required = true)
     private Integer user_id;
 
-    @Column(name= "description")
+    @Column(name = "from_user_id")
+    @NotNull
+    @JsonProperty(value = "from_user_id", required = true)
+    private Integer from_user_id;
+
+    @Column(name = "description")
     @NotEmpty
     @JsonProperty(value = "description", required = true)
     private String description;
@@ -37,43 +46,12 @@ public class Notification implements Serializable {
     @JsonProperty(value = "created_at", access = JsonProperty.Access.READ_ONLY)
     private Instant created_at = Instant.now();
 
-    public Notification() { }
+    public Notification() {
+    }
 
     public Notification(Integer user_id, String description) {
         this.user_id = user_id;
         this.description = description;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Instant getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(Instant created_at) {
-        this.created_at = created_at;
-    }
-
-    public Integer getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
     }
 
     @Override
@@ -91,6 +69,9 @@ public class Notification implements Serializable {
         if (!Objects.equals(this.user_id, givenObject.user_id)) {
             return false;
         }
+        if (!Objects.equals(this.from_user_id, givenObject.from_user_id)) {
+            return false;
+        }
         if (!Objects.equals(this.description, givenObject.description)) {
             return false;
         }
@@ -102,6 +83,7 @@ public class Notification implements Serializable {
         return "Notification {" +
                 "id=" + id +
                 ", user_id='" + user_id + '\'' +
+                ", from_user_id='" + from_user_id + '\'' +
                 ", description='" + description + '\'' +
                 ", created_at=" + created_at +
                 '}';

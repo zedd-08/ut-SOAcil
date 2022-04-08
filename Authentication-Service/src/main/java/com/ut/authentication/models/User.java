@@ -3,6 +3,7 @@ package com.ut.authentication.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +17,8 @@ import java.io.Serializable;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "users")
-public class UserResponse implements Serializable {
+@Getter
+public class User implements Serializable {
 	@NotNull
 	@Id
 	@Column(name = "user_id", nullable = false)
@@ -27,9 +29,4 @@ public class UserResponse implements Serializable {
 	@Column(name = "password")
 	@JsonProperty(value = "password")
 	private String password;
-
-	public Integer getUser_id() { return user_id; }
-	public String getPassword() {
-		return this.password;
-	}
 }

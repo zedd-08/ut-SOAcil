@@ -1,6 +1,7 @@
-package com.ut.soacil.postservice.utils;
+package com.ut.user.util;
 
-import com.ut.soacil.postservice.models.NotificationBody;
+import com.ut.user.models.NotificationBody;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
