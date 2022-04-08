@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -36,7 +38,8 @@ public class UserController {
 	@GetMapping(path = "/{userId}/friends")
 	@Operation(summary = "Get friends of a given User.", parameters = {
 			@Parameter(in = ParameterIn.HEADER, name = "auth_token", description = "Authentication token provided for the user", required = true, schema = @Schema(implementation = String.class)),
-			@Parameter(in = ParameterIn.PATH, name = "userId", description = "User ID", required = true, schema = @Schema(implementation = Integer.class))
+			@Parameter(in = ParameterIn.HEADER, name = "user_id", description = "User ID of the logged in user", required = true, schema = @Schema(implementation = Integer.class)),
+			@Parameter(in = ParameterIn.PATH, name = "userId", description = "User ID to get friend list of", required = true, schema = @Schema(implementation = Integer.class))
 	})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {
@@ -45,8 +48,8 @@ public class UserController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized"),
 			@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
 	})
-	public @ResponseBody ResponseEntity<Iterable<User>> getUserFriends(@PathVariable("userId") Integer userId,
-			@RequestHeader("auth_token") String authToken) {
+	public @ResponseBody ResponseEntity<Iterable<User>> getUserFriends(@PathVariable("userId") Integer otherUserId,
+			@RequestHeader("auth_token") String authToken, @RequestHeader("user_id") Integer userId) {
 
 		Auth0Body auth0Body = new Auth0Body();
 		auth0Body.setUser_id(userId);
@@ -55,7 +58,7 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
-		User user = userRepository.findById(userId).orElse(null);
+		User user = userRepository.findById(otherUserId).orElse(null);
 		List<Integer> friendList = user == null ? Collections.emptyList() : user.getFriends();
 		ArrayList<User> friendListUsers = new ArrayList<>();
 		for (int i : friendList) {
@@ -117,12 +120,17 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
+		User user = userRepository.findById(userId).orElse(null);
+
+		if (user.getFriends().contains(friendId)) {
+			return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
+		}
+
 		User friendUser = userRepository.findById(friendId).orElse(null);
 		if (null == friendUser) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 
-		User user = userRepository.findById(userId).orElse(null);
 		List<Integer> friends = user.getFriends();
 		friends.add(friendId);
 		user.setFriends(friends);
@@ -135,7 +143,12 @@ public class UserController {
 
 		NotificationBody notificationBody = new NotificationBody(friendId, userId,
 				user.getFirstName() + " added you as a friend!");
-		NotificationHandler.sendNotification(notificationBody);
+
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+		headers.add("auth_token", authToken);
+		headers.add("user_id", String.valueOf(userId));
+
+		NotificationHandler.sendNotification(notificationBody, headers);
 
 		return ResponseEntity.ok(true);
 	}
@@ -157,6 +170,6 @@ public class UserController {
 		userToAdd.setUserHandle(user.getUserHandle());
 		userRepository.save(userToAdd);
 
-		return AuthenticateUser.loginUser(userToAdd);
+		return AuthenticateUser.loginUser(user.getUserHandle(), user.getPassword());
 	}
 }

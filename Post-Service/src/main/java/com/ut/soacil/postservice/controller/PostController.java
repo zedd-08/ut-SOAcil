@@ -7,6 +7,8 @@ import com.ut.soacil.postservice.repository.PostRepository;
 import com.ut.soacil.postservice.utils.AuthenticateUser;
 import com.ut.soacil.postservice.utils.NotificationHandler;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("*")
@@ -54,7 +58,10 @@ public class PostController {
 	}
 
 	@PostMapping(path = "/add")
-	@Operation(summary = "Create and add a new post.")
+	@Operation(summary = "Create and add a new post.", parameters = {
+			@Parameter(in = ParameterIn.HEADER, name = "auth_token", description = "Authentication token provided for the user", required = true, schema = @Schema(implementation = String.class)),
+			@Parameter(in = ParameterIn.HEADER, name = "user_id", description = "User ID of the logged in user", required = true, schema = @Schema(implementation = Integer.class)),
+	})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {
 					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Post.class))
@@ -82,7 +89,11 @@ public class PostController {
 	}
 
 	@DeleteMapping(path = "/{post_id}")
-	@Operation(summary = "Get post by id.")
+	@Operation(summary = "Get post by id.", parameters = {
+			@Parameter(in = ParameterIn.HEADER, name = "auth_token", description = "Authentication token provided for the user", required = true, schema = @Schema(implementation = String.class)),
+			@Parameter(in = ParameterIn.HEADER, name = "user_id", description = "User ID of the logged in user", required = true, schema = @Schema(implementation = Integer.class)),
+			@Parameter(in = ParameterIn.PATH, name = "post_id", description = "Post ID of the post to delete", required = true, schema = @Schema(implementation = Integer.class))
+	})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {
 					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = String.class))
@@ -104,12 +115,19 @@ public class PostController {
 		if (null == post) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found!");
 		}
+		if (post.getUser_id() != userId) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
 		postRepository.deleteById(postId);
 		return ResponseEntity.status(HttpStatus.OK).body("Deleted post");
 	}
 
 	@PutMapping(path = "/{post_id}/like")
-	@Operation(summary = "Adds a like to the given post from the user specified on the message body.")
+	@Operation(summary = "Adds a like to the given post from the user specified on the message body.", parameters = {
+			@Parameter(in = ParameterIn.HEADER, name = "auth_token", description = "Authentication token provided for the user", required = true, schema = @Schema(implementation = String.class)),
+			@Parameter(in = ParameterIn.HEADER, name = "user_id", description = "User ID of the logged in user", required = true, schema = @Schema(implementation = Integer.class)),
+			@Parameter(in = ParameterIn.PATH, name = "post_id", description = "Post ID of the post to like", required = true, schema = @Schema(implementation = Integer.class))
+	})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {
 					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = String.class))
@@ -136,12 +154,22 @@ public class PostController {
 		postRepository.save(post);
 
 		NotificationBody notificationBody = new NotificationBody(to_user_id, userId, "Someone liked your post!");
-		NotificationHandler.sendNotification(notificationBody);
+
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+		headers.add("auth_token", authToken);
+		headers.add("user_id", String.valueOf(userId));
+
+		NotificationHandler.sendNotification(notificationBody, headers);
 		return ResponseEntity.status(HttpStatus.OK).body("Liked post");
 	}
 
 	@PutMapping(path = "/{post_id}/update")
-	@Operation(summary = "Updates an edited post.")
+	@Operation(summary = "Updates an existing post.", parameters = {
+			@Parameter(in = ParameterIn.HEADER, name = "auth_token", description = "Authentication token provided for the user", required = true, schema = @Schema(implementation = String.class)),
+			@Parameter(in = ParameterIn.HEADER, name = "user_id", description = "User ID of the logged in user", required = true, schema = @Schema(implementation = Integer.class)),
+			@Parameter(in = ParameterIn.PATH, name = "post_id", description = "Post ID of the post to update", required = true, schema = @Schema(implementation = Integer.class))
+
+	})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {
 					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = String.class))
@@ -163,6 +191,9 @@ public class PostController {
 		Post post = postRepository.findById(postId).orElse(null);
 		if (null == post) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found!");
+		}
+		if (post.getUser_id() != userId) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		post.setContent(postReq.getContent());
 		postRepository.save(post);

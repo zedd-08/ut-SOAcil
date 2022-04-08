@@ -14,4 +14,9 @@ public interface Auth0Repository extends CrudRepository<Auth0, Integer> {
             "FROM User u " +
             "WHERE u.user_id = :user_id")
     User findUserById(@Param("user_id") Integer user_id);
+
+    @Query("SELECT u " +
+            "FROM User u " +
+            "WHERE u.user_handle = :user_handle")
+    User findUserByhandle(@Param("user_handle") String user_handle);
 }

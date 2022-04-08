@@ -1,11 +1,12 @@
 package com.ut.user.util;
 
 import com.ut.user.models.Auth0Body;
-import com.ut.user.models.User;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 public class AuthenticateUser {
@@ -18,11 +19,14 @@ public class AuthenticateUser {
 		ResponseEntity<Boolean> isAuthValid = new RestTemplate().exchange(
 				AUTH_SERVICE_CHECK_ENDPOINT + AUTH_SERVICE_IS_VALID, HttpMethod.POST,
 				httpEntity, Boolean.class);
-		return Boolean.TRUE.equals(isAuthValid.getBody());
+		return isAuthValid.getBody();
 	}
 
-	public static ResponseEntity<Auth0Body> loginUser(User user) {
-		HttpEntity<User> httpEntity = new HttpEntity<>(user);
+	public static ResponseEntity<Auth0Body> loginUser(String userHandle, String password) {
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+		headers.add("user_handle", userHandle);
+		headers.add("password", password);
+		HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 		ResponseEntity<Auth0Body> auth0 = new RestTemplate().exchange(AUTH_SERVICE_CHECK_ENDPOINT + AUTH_SERVICE_LOGIN,
 				HttpMethod.POST,
 				httpEntity, Auth0Body.class);

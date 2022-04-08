@@ -16,6 +16,6 @@ public class AuthenticateUser {
 		ResponseEntity<Boolean> isAuthValid = new RestTemplate().exchange(
 				AUTH_SERVICE_CHECK_ENDPOINT + AUTH_SERVICE_IS_VALID, HttpMethod.POST,
 				httpEntity, Boolean.class);
-		return Boolean.TRUE.equals(isAuthValid.getBody());
+		return isAuthValid.getBody();
 	}
 }

@@ -68,7 +68,7 @@ public class NotificationController {
 	@Transactional
 	@Operation(summary = "Post a notification to send to users.", parameters = {
 			@Parameter(in = ParameterIn.HEADER, name = "auth_token", description = "Authentication token provided for the user", required = true, schema = @Schema(implementation = String.class)),
-			@Parameter(in = ParameterIn.HEADER, name = "userId", description = "User ID of logged in user", required = true, schema = @Schema(implementation = Integer.class)),
+			@Parameter(in = ParameterIn.HEADER, name = "user_id", description = "User ID of logged in user", required = true, schema = @Schema(implementation = Integer.class)),
 			@Parameter(in = ParameterIn.PATH, name = "toUserId", description = "User ID of notification recipient", required = true, schema = @Schema(implementation = Integer.class))
 	})
 	@ApiResponses(value = {

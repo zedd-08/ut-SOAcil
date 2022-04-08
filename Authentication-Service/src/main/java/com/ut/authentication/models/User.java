@@ -25,6 +25,10 @@ public class User implements Serializable {
 	@JsonProperty(value = "user_id")
 	private Integer user_id;
 
+	@Column(name = "user_handle", nullable = false)
+	@JsonProperty(value = "user_handle")
+	private String user_handle;
+
 	@NotEmpty
 	@Column(name = "password")
 	@JsonProperty(value = "password")

@@ -4,6 +4,8 @@ import com.ut.authentication.models.Auth0;
 import com.ut.authentication.models.User;
 import com.ut.authentication.repository.Auth0Repository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,13 +37,14 @@ public class AuthenticationController {
 			}),
 			@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
 	})
-	public @ResponseBody ResponseEntity<Auth0> getNewAuthToken(@Validated @RequestBody User userResponse) {
+	public @ResponseBody ResponseEntity<Auth0> getNewAuthToken(@Validated @RequestBody User user) {
 		Auth0 auth = new Auth0();
-		if (!isPasswordValid(userResponse)) {
+		User actualUser = authRepository.findUserById(user.getUser_id());
+		if (!actualUser.getPassword().equals(user.getPassword())) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		auth.setAuth_token();
-		auth.setUser_id(userResponse.getUser_id());
+		auth.setUser_id(user.getUser_id());
 		authRepository.save(auth);
 		return ResponseEntity.ok(auth);
 	}
@@ -66,42 +69,46 @@ public class AuthenticationController {
 	}
 
 	@PostMapping(path = "/login")
-	@Operation(summary = "Endpoint for logging in the user.")
+	@Operation(summary = "Endpoint for logging in the user.", parameters = {
+			@Parameter(in = ParameterIn.HEADER, name = "user_handle", description = "User handle of the user to log in", required = true, schema = @Schema(implementation = String.class)),
+			@Parameter(in = ParameterIn.HEADER, name = "password", description = "Password of user", required = true, schema = @Schema(implementation = String.class)),
+	})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {
 					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Auth0.class))
 			}),
 			@ApiResponse(responseCode = "401", description = "Invalid password")
 	})
-	public @ResponseBody ResponseEntity<Auth0> login(@Validated @RequestBody User userResponse) {
+	public @ResponseBody ResponseEntity<Auth0> login(@RequestHeader("user_handle") String userHandle,
+			@RequestHeader("password") String password) {
 		Auth0 auth = new Auth0();
-		auth.setUser_id(userResponse.getUser_id());
-		if (isPasswordValid(userResponse)) {
-			auth.setAuth_token();
-			authRepository.save(auth);
-		} else {
+		User user = authRepository.findUserByhandle(userHandle);
+		if (user == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
+		auth.setUser_id(user.getUser_id());
+		if (!user.getPassword().equals(password)) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+		auth.setAuth_token();
+		authRepository.save(auth);
 		return ResponseEntity.ok(auth);
 	}
 
 	@PostMapping(path = "/logout")
-	@Operation(summary = "Endpoint for logging out the user.")
+	@Operation(summary = "Endpoint for logging out the user.", parameters = {
+			@Parameter(in = ParameterIn.HEADER, name = "user_id", description = "User ID of the logged in user", required = true, schema = @Schema(implementation = Integer.class))
+	})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {
 					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Boolean.class))
 			}),
 			@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
 	})
-	public @ResponseBody Boolean logout(@Validated @RequestBody User userResponse) {
-		User actualUser = authRepository.findUserById(userResponse.getUser_id());
+	public @ResponseBody Boolean logout(@RequestHeader("user_id") Integer userId) {
+		User actualUser = authRepository.findUserById(userId);
 		authRepository.findById(actualUser.getUser_id())
 				.ifPresent(auth0 -> authRepository.deleteById(auth0.getUser_id()));
 		return true;
-	}
-
-	private boolean isPasswordValid(User userResponse) {
-		User actual = authRepository.findUserById(userResponse.getUser_id());
-		return actual != null && actual.getPassword().equals(userResponse.getPassword());
 	}
 }
