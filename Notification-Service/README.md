@@ -66,3 +66,7 @@ The following endpoints are available, all of them require user authentication:
      ```
 
    - Returns a simple string message saying "_Created the notification._"
+
+## Swagger UI
+
+![Notification service Swagger UI](Swagger-notification-service.jpeg)

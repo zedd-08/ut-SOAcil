@@ -129,3 +129,7 @@ The following endpoints are available:
    - Requires the `{post_id}` path variable.
 
    - Returns a simple string payload with message "_Deleted post_"
+
+## Swagger UI
+
+![Post service Swagger UI](Swagger-post-service.jpeg)

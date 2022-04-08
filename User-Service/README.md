@@ -123,3 +123,7 @@ The following endpoints are available:
 
    - Requires the `{userId}` path variable.
    - Returns a simple boolean payload, `true` if successfully added, `false` otherwise.
+
+## Swagger UI
+
+![User service swagger UI](Swagger-user-service.jpeg)

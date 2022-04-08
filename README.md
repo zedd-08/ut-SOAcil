@@ -23,7 +23,7 @@ There are currently 4 backend services in the project, each one of them in their
 - Post service
 - User service
 
-More details on each service is present in the README in the services' respective folders.
+More details on each service is present in the README in the services' respective folders, along with endpoint descriptions and swagger screenshots.
 
 ## Data models and database connection
 
@@ -80,3 +80,9 @@ We have used [MySQL](https://www.mysql.com/) database for persistant storage. Th
 | `posts`         | `Post`                           |
 | `users`         | `User`                           |
 | `user_friends`  | _Stores array of user's friends_ |
+
+## Postman Collection
+
+The `SOA-cil.postman_collection.json` file can be imported to test the API REST endpoints from postman.
+
+![Postman Collection](SOA-cil-postman-collection.png)

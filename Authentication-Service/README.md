@@ -73,3 +73,7 @@ This service is hosted at `/v1/auth-service` with the following available endpoi
      | _user_id_ | 2     |
 
    - Returns either `true` or `false` boolean payload.
+
+## Swagger UI
+
+![Authentication service Swagger UI](Swagger-authentication-service.jpeg)
