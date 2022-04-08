@@ -1,0 +1,536 @@
+{
+	"info": {
+		"_postman_id": "39b6397a-3511-4cf0-8e61-920f6c6e2a78",
+		"name": "SOA-cil",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user-service",
+			"item": [
+				{
+					"name": "user-add",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "auth_token",
+								"value": "b49tZ1q2AhXQiTx67CSQQvj73",
+								"type": "text"
+							},
+							{
+								"key": "user_id",
+								"value": "9",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{user-service-endpoint}}/5/add",
+							"host": [
+								"{{user-service-endpoint}}"
+							],
+							"path": [
+								"5",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"user_handle\": \"kunkkarox\",\r\n  \"firstName\": \"Kunka\",\r\n  \"lastName\": \"Admiral\",\r\n  \"password\": \"kunka77\",\r\n  \"bio\": \"X mark the spot!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user-service-endpoint}}/create",
+							"host": [
+								"{{user-service-endpoint}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{user-service-endpoint}}/2",
+							"host": [
+								"{{user-service-endpoint}}"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-friends",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "auth_token",
+								"value": "b49tZ1q2AhXQiTx67CSQQvj73",
+								"type": "text"
+							},
+							{
+								"key": "user_id",
+								"value": "9",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{user-service-endpoint}}/5/friends",
+							"host": [
+								"{{user-service-endpoint}}"
+							],
+							"path": [
+								"5",
+								"friends"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{user-service-endpoint}}/all",
+							"host": [
+								"{{user-service-endpoint}}"
+							],
+							"path": [
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth-service",
+			"item": [
+				{
+					"name": "isauthvalid",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": 2,\r\n    \"auth_token\": \"L7n0egIkOnwDoC8XQuDZ6xLtE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{auth-service-endpoint}}/isauthvalid",
+							"host": [
+								"{{auth-service-endpoint}}"
+							],
+							"path": [
+								"isauthvalid"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getauthtoken",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"user_id\": 2,\r\n  \"user_handle\": \"manish96\",\r\n  \"password\": \"manish96\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{auth-service-endpoint}}/getauthtoken",
+							"host": [
+								"{{auth-service-endpoint}}"
+							],
+							"path": [
+								"getauthtoken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "user_id",
+								"value": "2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{auth-service-endpoint}}/logout",
+							"host": [
+								"{{auth-service-endpoint}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "user_handle",
+								"value": "manish96",
+								"type": "text"
+							},
+							{
+								"key": "password",
+								"value": "manish96",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{auth-service-endpoint}}/login",
+							"host": [
+								"{{auth-service-endpoint}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "notification-service",
+			"item": [
+				{
+					"name": "user-notifications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "auth_token",
+								"value": "ZX9reEKTbKBXA6lLLQuHvITV3",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{notification-service-endpoint}}/2",
+							"host": [
+								"{{notification-service-endpoint}}"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-send-notification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "auth_token",
+								"value": "b49tZ1q2AhXQiTx67CSQQvj73",
+								"type": "text"
+							},
+							{
+								"key": "user_id",
+								"value": "9",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"user_id\": 2,\r\n  \"from_user_id\": 9,\r\n  \"description\": \"Hello! This is a test notification!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{notification-service-endpoint}}/2",
+							"host": [
+								"{{notification-service-endpoint}}"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "post-service",
+			"item": [
+				{
+					"name": "post-update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "auth_token",
+								"value": "b49tZ1q2AhXQiTx67CSQQvj73",
+								"type": "text"
+							},
+							{
+								"key": "user_id",
+								"value": "9",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"content\": \"(Updated) This is my first post here! X marks the spot ;) 😌\",\r\n  \"user_id\": 9\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{post-service-endpoint}}/12/update",
+							"host": [
+								"{{post-service-endpoint}}"
+							],
+							"path": [
+								"12",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post-like",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "auth_token",
+								"value": "fKccklDWt2KsHRIaOuwYH1H1W",
+								"type": "text"
+							},
+							{
+								"key": "user_id",
+								"value": "2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{post-service-endpoint}}/12/like",
+							"host": [
+								"{{post-service-endpoint}}"
+							],
+							"path": [
+								"12",
+								"like"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "auth_token",
+								"value": "b49tZ1q2AhXQiTx67CSQQvj73",
+								"type": "text"
+							},
+							{
+								"key": "user_id",
+								"value": "9",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"content\": \"This is my second post here ;) X marks the spot XD get rekt noobs\",\r\n  \"user_id\": 9\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{post-service-endpoint}}/add",
+							"host": [
+								"{{post-service-endpoint}}"
+							],
+							"path": [
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-single-post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{post-service-endpoint}}/12",
+							"host": [
+								"{{post-service-endpoint}}"
+							],
+							"path": [
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-post",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "auth_token",
+								"value": "b49tZ1q2AhXQiTx67CSQQvj73",
+								"type": "text"
+							},
+							{
+								"key": "user_id",
+								"value": "9",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{post-service-endpoint}}/13",
+							"host": [
+								"{{post-service-endpoint}}"
+							],
+							"path": [
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{post-service-endpoint}}/all",
+							"host": [
+								"{{post-service-endpoint}}"
+							],
+							"path": [
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "auth-service-endpoint",
+			"value": "http://localhost:9090/v1/auth-service",
+			"type": "string"
+		},
+		{
+			"key": "notification-service-endpoint",
+			"value": "http://localhost:9091/v1/notification-service",
+			"type": "string"
+		},
+		{
+			"key": "post-service-endpoint",
+			"value": "http://localhost:9092/v1/post-service",
+			"type": "string"
+		},
+		{
+			"key": "user-service-endpoint",
+			"value": "http://localhost:9093/v1/user-service",
+			"type": "string"
+		}
+	]
+}
