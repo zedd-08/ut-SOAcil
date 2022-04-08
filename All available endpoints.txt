@@ -1,0 +1,24 @@
+/v1/auth-service
+	POST	/getauthtoken		!auth
+	POST	/isauthvalid		<auth>
+	POST	/login				!auth
+	POST	/logout				~auth
+
+/v1/notification-service
+	GET		/{user-id}			<auth>
+	POST	/					<auth>
+
+/v1/post-service
+	GET		/all
+	POST	/add				<auth>
+	GET		/{post_id}
+	DELETE	/{post_id}			<auth>
+	PUT		/{post_id}/like		<auth>
+	PUT		/{post_id}/update	<auth>
+
+/v1/user-service
+	PUT		/{userId}/add		<auth>
+	GET		/{userId}/friends	<auth>
+	GET		/{userId}			<auth>
+	GET		/all
+	POST	/create
