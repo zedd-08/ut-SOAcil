@@ -27,12 +27,6 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2021.0.1"
-	}
-}
-
 tasks.named('test') {
 	useJUnitPlatform()
 }
