@@ -1,0 +1,2 @@
+docker run -d -p 5672:5672 --hostname rabbit --name rabbit rabbitmq:latest
+docker run --name soacil-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -e MYSQL_USER=soauser -e MYSQL_PASSWORD=soauser -e MYSQL_DATABASE=soadb -d mysql:latest
