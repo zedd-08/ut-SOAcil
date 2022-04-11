@@ -5,9 +5,9 @@ metadata:
 spec:
   ports:
     - port: 3306
-      targetPort: 3306
   selector:
     app: mysql
+  clusterIP: None
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -19,7 +19,6 @@ spec:
       app: mysql
   strategy:
     type: Recreate
-  replicas: 2
   template:
     metadata:
       labels:
@@ -27,16 +26,18 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: mysql:latest
+          image: mysql:5.6
           env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: manager
-            - name: MYSQL_USER
-              value: manish
-            - name: MYSQL_PASSWORD
-              value: manish96
-            - name: MYSQL_DATABASE
-              value: soaDB
+            - name: "MYSQL_ROOT_PASSWORD"
+              value: "password"
+            - name: "MYSQL_USER"
+              value: "soauser"
+            - name: "MYSQL_PASSWORD"
+              value: "soauser"
+            - name: "MYSQL_DATABASE"
+              value: "soadb"
+            - name: "MYSQL_ROOT_HOST"
+              value: "%"
           ports:
             - containerPort: 3306
           volumeMounts:
