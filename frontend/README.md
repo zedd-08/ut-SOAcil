@@ -1,3 +1,0 @@
-# Frontend of SOAcil
-
-**INCOMPLETE!**
