@@ -135,3 +135,6 @@ The created image is then pushed to docker hub so that kubernetes can download i
 Each of the service is built into a separate docker image and pushed to [docker hub under zedd08 namespace](https://hub.docker.com/u/zedd08).
 
 The folder [kube](kube) contains all the required deployment YAMLs and their description in the README.
+
+## Deployed Kubernetes architecture overview
+![Basic architecture](SOAcil-basic-architecture.png)
