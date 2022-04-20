@@ -1,6 +1,8 @@
 # Posts Service
 
-This is an asynchronous service, that handles sending notifications to a user and reading a logged in user's notifications. As sending and accessing a user's notification should have authentication based access, this service communicates synchronously to the **Authentication service**.
+This is a synchronous service, that handles post related tasks. As it handles posts created by certain user and the users' friends, many of the endpoint methods perform a synchronous communication with the authentication service. 
+
+This service also allows for adding of a new post for the user that is logged in. And it allows for the editing of the post as well as liking and deleting of the post. It also sends an asynchronous notification when another user likes your post.
 
 ## Data models
 

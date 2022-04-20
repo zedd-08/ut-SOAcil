@@ -16,7 +16,7 @@ The project uses REST services and works specifically using JSON payloads.
 
 Running locally, the following changes must be done:
 
-- Update `application.properties` for each of the service for the correct mysql host and rabbitmq host (only for notif-service)
+- Update `application.properties` for each of the service for the correct mysql host and rabbitmq host (for services using message queues - `user` service, `notif` service, and `post` service).
 - Run the docker commands present in [docker-commands](docker-commands) file.
 
 After this, the services can be run as spring boot applciations from the IDE without having to install MYSQL and RabbitMQ server locally.

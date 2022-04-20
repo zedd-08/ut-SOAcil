@@ -19,16 +19,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'mysql:mysql-connector-java'
-    implementation 'io.swagger.core.v3:swagger-annotations:2.1.13'
-    implementation 'io.swagger.core.v3:swagger-jaxrs2:2.1.13'
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
-    implementation 'commons-collections:commons-collections:3.2.2'
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.0'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2:2.2.0'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.7'
+//    implementation 'commons-collections:commons-collections:3.2.2'
     compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-    annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
+//    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+//    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+//    annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

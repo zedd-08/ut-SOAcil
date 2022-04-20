@@ -1,6 +1,6 @@
 # Notification Service
 
-This is an asynchronous service, that handles sending notifications to a user and reading a logged in user's notifications. As sending and accessing a user's notification should have authentication based access, this service communicates synchronously to the **Authentication service**.
+This is an asynchronous service, that is subscribed to a *message queue* representing notifications pushed by other services. It saves the notification sent to the user and handles reading a logged-in user's notifications. As accessing a user's notification should have authentication based access, this service communicates synchronously to the **Authentication service**.
 
 This service is used by the User service and Post service to send notifications asynchronously on adding another user as friend or liking a post.
 
@@ -44,29 +44,7 @@ The following endpoints are available, all of them require user authentication:
      		...
      	]
      ```
-
-2. **POST** on `/{toUserId}`: This endpoint is used to send a notification as a message in the receiving user's notification message queue.
-
-   - Requires the following header attributes:
-
-     | key          | param                     |
-     | ------------ | ------------------------- |
-     | _user_id_    | 5                         |
-     | _auth_token_ | Dd76NE8w73nsdKIdwoamd98JN |
-
-   - Requires the `/{toUserId}` path variable.
-   - Requires a JSON payload as follows (`Notification` model):
-
-     ```
-     {
-     	"user_id": 2,
-     	"from_user_id": 5,
-     	"description": "User2 liked your post!",
-     }
-     ```
-
-   - Returns a simple string message saying "_Created the notification._"
-
+   
 ## Swagger UI
 
 ![Notification service Swagger UI](Swagger-notification-service.jpeg)

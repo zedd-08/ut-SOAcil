@@ -5,7 +5,6 @@ import com.ut.user.models.NotificationBody;
 import com.ut.user.models.User;
 import com.ut.user.repository.UserRepository;
 import com.ut.user.util.AuthenticateUser;
-import com.ut.user.util.NotificationHandler;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,6 +15,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -34,6 +35,12 @@ import java.util.List;
 public class UserController {
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
+	@Value("${spring.rabbitmq.exchange}")
+	private String exchange;
+	@Value("${spring.rabbitmq.routing-key}")
+	private String routingKey;
 
 	@GetMapping(path = "/{userId}/friends")
 	@Operation(summary = "Get friends of a given User.", parameters = {
@@ -121,6 +128,10 @@ public class UserController {
 		}
 
 		User user = userRepository.findById(userId).orElse(null);
+		
+		if(user == null) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
 
 		if (user.getFriends().contains(friendId)) {
 			return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
@@ -143,13 +154,7 @@ public class UserController {
 
 		NotificationBody notificationBody = new NotificationBody(friendId, userId,
 				user.getFirstName() + " added you as a friend!");
-
-		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-		headers.add("auth_token", authToken);
-		headers.add("user_id", String.valueOf(userId));
-
-		NotificationHandler.sendNotification(notificationBody, headers);
-
+		rabbitTemplate.convertAndSend(exchange, routingKey, notificationBody);
 		return ResponseEntity.ok(true);
 	}
 

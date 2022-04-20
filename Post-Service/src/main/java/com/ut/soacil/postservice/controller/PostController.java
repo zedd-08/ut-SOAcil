@@ -5,7 +5,6 @@ import com.ut.soacil.postservice.models.NotificationBody;
 import com.ut.soacil.postservice.models.Post;
 import com.ut.soacil.postservice.repository.PostRepository;
 import com.ut.soacil.postservice.utils.AuthenticateUser;
-import com.ut.soacil.postservice.utils.NotificationHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -14,13 +13,15 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @CrossOrigin("*")
 @RestController
@@ -28,6 +29,12 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
 	@Autowired
 	private PostRepository postRepository;
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
+	@Value("${spring.rabbitmq.exchange}")
+	private String exchange;
+	@Value("${spring.rabbitmq.routing-key}")
+	private String routingKey;
 
 	@GetMapping(path = "/all")
 	@Operation(summary = "Get all posts.")
@@ -115,7 +122,7 @@ public class PostController {
 		if (null == post) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found!");
 		}
-		if (post.getUser_id() != userId) {
+		if (!Objects.equals(post.getUser_id(), userId)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		postRepository.deleteById(postId);
@@ -154,12 +161,7 @@ public class PostController {
 		postRepository.save(post);
 
 		NotificationBody notificationBody = new NotificationBody(to_user_id, userId, "Someone liked your post!");
-
-		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-		headers.add("auth_token", authToken);
-		headers.add("user_id", String.valueOf(userId));
-
-		NotificationHandler.sendNotification(notificationBody, headers);
+		rabbitTemplate.convertAndSend(exchange, routingKey, notificationBody);
 		return ResponseEntity.status(HttpStatus.OK).body("Liked post");
 	}
 
@@ -200,3 +202,5 @@ public class PostController {
 		return ResponseEntity.status(HttpStatus.OK).body("Updated post");
 	}
 }
+
+// 		rabbitTemplate.convertAndSend(exchange, routingKey, notification);
