@@ -279,43 +279,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "user-send-notification",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "auth_token",
-								"value": "b49tZ1q2AhXQiTx67CSQQvj73",
-								"type": "text"
-							},
-							{
-								"key": "user_id",
-								"value": "9",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"user_id\": 2,\r\n  \"from_user_id\": 9,\r\n  \"description\": \"Hello! This is a test notification!\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{notification-service-endpoint}}/2",
-							"host": [
-								"{{notification-service-endpoint}}"
-							],
-							"path": [
-								"2"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
