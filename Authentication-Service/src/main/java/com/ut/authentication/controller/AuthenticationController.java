@@ -30,21 +30,25 @@ public class AuthenticationController {
 	private static final Long TIMEOUT = 30L;
 
 	@PostMapping(path = "/getauthtoken")
-	@Operation(summary = "Generate an authentication token for a user.")
+	@Operation(summary = "Generate an authentication token for a user", parameters = {
+			@Parameter(in = ParameterIn.HEADER, name = "user_handle", description = "User handle of the user", required = true, schema = @Schema(implementation = String.class)),
+			@Parameter(in = ParameterIn.HEADER, name = "password", description = "Password", required = true, schema = @Schema(implementation = String.class)),
+	})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {
 					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Auth0.class))
 			}),
-			@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+			@ApiResponse(responseCode = "401", description = "Invalid user handle/password")
 	})
-	public @ResponseBody ResponseEntity<Auth0> getNewAuthToken(@Validated @RequestBody User user) {
+	public @ResponseBody ResponseEntity<Auth0> getNewAuthToken(@RequestHeader("user_handle") String userHandle,
+			@RequestHeader("password") String password) {
 		Auth0 auth = new Auth0();
-		User actualUser = authRepository.findUserById(user.getUser_id());
-		if (!actualUser.getPassword().equals(user.getPassword())) {
+		User actualUser = authRepository.findUserByhandle(userHandle);
+		if (!actualUser.getPassword().equals(password)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		auth.setAuth_token();
-		auth.setUser_id(user.getUser_id());
+		auth.setUser_id(actualUser.getUser_id());
 		authRepository.save(auth);
 		return ResponseEntity.ok(auth);
 	}
@@ -54,15 +58,16 @@ public class AuthenticationController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {
 					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Boolean.class))
-			}),
-			@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+			})
 	})
 	public @ResponseBody Boolean isAuthValid(@Validated @RequestBody Auth0 auth0) {
 		Auth0 auth = authRepository.findById(auth0.getUser_id()).orElse(null);
-		if (auth == null)
+		if (auth == null) {
 			return false;
-		if (!auth.getAuth_token().equals(auth0.getAuth_token()))
+		}
+		if (!auth.getAuth_token().equals(auth0.getAuth_token())) {
 			return false;
+		}
 		Instant now = Instant.now();
 		Duration dur = Duration.between(auth.getCreated_at(), now);
 		return dur.toMinutes() <= TIMEOUT;
@@ -71,13 +76,13 @@ public class AuthenticationController {
 	@PostMapping(path = "/login")
 	@Operation(summary = "Endpoint for logging in the user.", parameters = {
 			@Parameter(in = ParameterIn.HEADER, name = "user_handle", description = "User handle of the user to log in", required = true, schema = @Schema(implementation = String.class)),
-			@Parameter(in = ParameterIn.HEADER, name = "password", description = "Password of user", required = true, schema = @Schema(implementation = String.class)),
+			@Parameter(in = ParameterIn.HEADER, name = "password", description = "Password", required = true, schema = @Schema(implementation = String.class)),
 	})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {
 					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Auth0.class))
 			}),
-			@ApiResponse(responseCode = "401", description = "Invalid password")
+			@ApiResponse(responseCode = "401", description = "Invalid user handle/password")
 	})
 	public @ResponseBody ResponseEntity<Auth0> login(@RequestHeader("user_handle") String userHandle,
 			@RequestHeader("password") String password) {
@@ -97,16 +102,24 @@ public class AuthenticationController {
 
 	@PostMapping(path = "/logout")
 	@Operation(summary = "Endpoint for logging out the user.", parameters = {
-			@Parameter(in = ParameterIn.HEADER, name = "user_id", description = "User ID of the logged in user", required = true, schema = @Schema(implementation = Integer.class))
+			@Parameter(in = ParameterIn.HEADER, name = "user_handle", description = "User handle of the logged in user", required = true, schema = @Schema(implementation = Integer.class)),
+			@Parameter(in = ParameterIn.HEADER, name = "auth_token", description = "Authentication token of user", required = true, schema = @Schema(implementation = String.class)),
 	})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", content = {
 					@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Boolean.class))
-			}),
-			@ApiResponse(responseCode = "500", description = "Internal Error, issue with the application.")
+			})
 	})
-	public @ResponseBody Boolean logout(@RequestHeader("user_id") Integer userId) {
-		User actualUser = authRepository.findUserById(userId);
+	public @ResponseBody Boolean logout(@RequestHeader("user_handle") String userHandle,
+			@RequestHeader("auth_token") String authToken) {
+		User actualUser = authRepository.findUserByhandle(userHandle);
+		if (actualUser == null) {
+			return false;
+		}
+		Auth0 auth = authRepository.findById(actualUser.getUser_id()).orElse(null);
+		if (auth == null || !auth.getAuth_token().equals(authToken)) {
+			return false;
+		}
 		authRepository.findById(actualUser.getUser_id())
 				.ifPresent(auth0 -> authRepository.deleteById(auth0.getUser_id()));
 		return true;
