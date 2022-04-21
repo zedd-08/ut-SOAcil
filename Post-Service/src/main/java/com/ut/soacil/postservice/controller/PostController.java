@@ -96,7 +96,7 @@ public class PostController {
 	}
 
 	@DeleteMapping(path = "/{post_id}")
-	@Operation(summary = "Get post by id.", parameters = {
+	@Operation(summary = "Delete post by id.", parameters = {
 			@Parameter(in = ParameterIn.HEADER, name = "auth_token", description = "Authentication token provided for the user", required = true, schema = @Schema(implementation = String.class)),
 			@Parameter(in = ParameterIn.HEADER, name = "user_id", description = "User ID of the logged in user", required = true, schema = @Schema(implementation = Integer.class)),
 			@Parameter(in = ParameterIn.PATH, name = "post_id", description = "Post ID of the post to delete", required = true, schema = @Schema(implementation = Integer.class))
