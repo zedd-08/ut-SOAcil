@@ -43,6 +43,12 @@ This service is hosted at `/v1/auth-service` with the following available endpoi
    }
    ```
 
+Logging in with valid credentials:
+![Login](img/login.png)
+
+Logging in with invalid credentials:
+![Login invalid password](img/login-invalidpass.png)
+
 2. **POST** on `/getauthtoken`: This endpoint is required to re-authenticate a user after their existing authentication token expires. This endpoint takes in the `user_handle` and `auth_token`, validates them and generates a new token to use for the user, if provided token is expired.
 
    - Requires the following header attributes:
@@ -73,6 +79,12 @@ This service is hosted at `/v1/auth-service` with the following available endpoi
 
    - Returns either `true` or `false` boolean payload.
 
+Checking valid authentication credentials:
+![](img/isauthvalid.png)
+
+Checking invalid authentication credentials:
+![](img/isauthvalid-invalid.png)
+
 4. **POST** on `/logout`: This endpoint, as the name suggests, logs the user out of the application. As a dummy implementation for the project, the user's `auth_token` is removed from the database, making it invalid for any authentication related tasks. The current token is first validated to avoid unwanted logouts.
 
    - Requires the following header attributes:
@@ -84,6 +96,8 @@ This service is hosted at `/v1/auth-service` with the following available endpoi
 
    - Returns either `true` or `false` boolean payload.
 
+Logging out:
+![](img/logout.png)
 ## Swagger UI
 
 ![Authentication service Swagger UI](Swagger-authentication-service.jpeg)

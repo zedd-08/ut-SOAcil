@@ -40,6 +40,9 @@ The following endpoints are available:
      ]
      ```
 
+Getting all posts:
+![](img/post-all.png)
+
 2. **GET** on `/{post_id}`: This endpoint is also open to all. It returns only a single post object.
 
    - Requires the `{post_id}` path variable.
@@ -54,6 +57,9 @@ The following endpoints are available:
      	"created_at": "2022-04-08T22:50:57.922Z"
      }
      ```
+
+Getting a single post:
+![](img/post-single.png)
 
 3. **POST** on `/add`: This endpoint is used to create a new post by a user. It requires authentication and thus performs a synchronous communication with the authentication service.
 
@@ -85,6 +91,12 @@ The following endpoints are available:
    	}
    ```
 
+Creating a new post:
+![](img/post-add.png)
+
+Trying to create a new post with invalid authentication:
+![](img/post-add-unauthorized.png)
+
 4. **PUT** on `/{post_id}/update`: This endpoint is used to update any existing post by a user. It requires authentication and thus performs a synchronous communication with the authentication service. **The post can only be updated by the post's original author.**
 
    - Requires the following header attributes:
@@ -106,6 +118,9 @@ The following endpoints are available:
 
    - Returns a simple string payload with message "_Updated post_"
 
+Updating an existing post:
+![](img/post-updated.png)
+
 5. **PUT** on `/{post_id}/like`: This endpoint is used to like any existing post by a user. It requires authentication and thus performs a synchronous communication with the authentication service.
 
    - Requires the following header attributes:
@@ -118,6 +133,9 @@ The following endpoints are available:
    - Requires the `{post_id}` path variable.
 
    - Returns a simple string payload with message "_Liked post_"
+
+Liking a post, sends a notification to the author of the post:
+![](img/post-like.png)
 
 6. **DELETE** on `/{post_id}`: This endpoint is used to delete any existing post by a user. It requires authentication and thus performs a synchronous communication with the authentication service. **The post can only be deleted by the post's original author.**
 
@@ -132,6 +150,8 @@ The following endpoints are available:
 
    - Returns a simple string payload with message "_Deleted post_"
 
+Deleting a post:
+![](img/post-deleted.png)
 ## Swagger UI
 
 ![Post service Swagger UI](Swagger-post-service.jpeg)

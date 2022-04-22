@@ -66,13 +66,15 @@ docker run -d -p 5672:5672 --hostname my-rabbit --name soacil-rabbit rabbitmq:la
    ```
    kubectl apply -f app-deployment.yaml
    ```
-   This will deploy the images of the four services of SOAcil and start the `soacilapp` service.
+   This will deploy the images of the four services of SOAcil and start the `soacilapp` service:
+   ![](img/k8s-services.png)
 6. Once all k8s services are deployed, run
    ```
    kubectl tunnel
    ```
    This will expose the `soacilapp` service, which is a `LoadBalancer` service, on the mentioned ports - `9090` for _auth-service_, `9091` for _notif-service_, `9092` for _post-service_ and `9093` for _user-service_. This will allow us to access the application from our machine.
 
-We can monitor realtime status using `kubectl dashboard` which opens the dashboard UI in a new browser window.
+We can monitor realtime status using `kubectl dashboard` which opens the dashboard UI in a new browser window:
+![](img/k8s-dashboard.png)
 
 Kubernetes automatically pulls the required images from docker hub, thus it is not neccessary to pull the images in advance.

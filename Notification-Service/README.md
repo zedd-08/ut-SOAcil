@@ -44,7 +44,12 @@ The following endpoints are available, all of them require user authentication:
      		...
      	]
      ```
-   
+
+Notification on liking a post:
+![](img/notif-post-liked.png)
+
+Notification on being added as a friend:
+![](img/notif-user-add-friend.png)
 ## Swagger UI
 
 ![Notification service Swagger UI](Swagger-notification-service.jpeg)

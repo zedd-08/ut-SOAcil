@@ -40,6 +40,8 @@ The following endpoints are available:
      	...
      ]
      ```
+Getting details of all users on platform:
+![](img/user-get-all.png)
 
 2. **GET** on `/{userId}`: This endpoint is open to all, for dummy implementation. It returns the details of the requested user from the path variable.
 
@@ -58,6 +60,8 @@ The following endpoints are available:
      	"joined": "2022-04-08T23:05:06.005Z"
      }
      ```
+Getting a single user details:
+![](img/user-get-single.png)
 
 3. **GET** on `/{userId}/friends`: This endpoint requires authentication, thus performs a synchronous call with the authentication service.
 
@@ -88,6 +92,9 @@ The following endpoints are available:
      ]
      ```
 
+Getting user's friend list:
+![](img/user-friend-list.png)
+
 4. **POST** on `/create`: This endpoint would be accessed by the signup page of the application website. On creation of a new user, the user is automatically logged into the application performing a synchronous communication right after the user is created.
 
    - Requires a JSON payload as follows (`User` model):
@@ -111,6 +118,8 @@ The following endpoints are available:
      	"created_at": "2022-04-08T23:05:06.005Z"
      }
      ```
+Signing up to the application (i.e., creating new user):
+![](img/user-create.png)
 
 5. **PUT** on `/{userId}/add`: This endpoint is used to add another user as a friend. As it requires authentiaction, it performs a synchronous call to the authentication service. This service also sends a notification to the user added as friend, sending an asynchronous call to the notification service.
 
@@ -124,6 +133,8 @@ The following endpoints are available:
    - Requires the `{userId}` path variable.
    - Returns a simple boolean payload, `true` if successfully added, `false` otherwise.
 
+Adding a user as friend, sends a notification to the added user:
+![](img/user-add-friend.png)
 ## Swagger UI
 
 ![User service swagger UI](Swagger-user-service.jpeg)
