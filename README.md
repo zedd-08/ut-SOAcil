@@ -100,7 +100,7 @@ The `SOA-cil.postman_collection.json` file can be imported into postman to test 
 
 ## Application build
 
-The scripts [build-push-img.ps1](build-push-img.ps1) for Windows (requires powershell installed) and [build-push-img.sh](build-push-img.ps1) for Linux contains simple gradle build steps to build the jar, build the docker image and push the image to docker hub.
+The scripts [build-push-img.ps1](build-push-img.ps1) for Windows (requires powershell installed) and [build-push-img.sh](build-push-img.sh) for Linux contains simple gradle build steps to build the jar, build the docker image and push the image to docker hub.
 
 It goes through each of the service folders and runs the following steps:
 
