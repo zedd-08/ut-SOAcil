@@ -15,140 +15,6 @@
         <bpmn:flowNodeRef>Activity_0vdz86d</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:subProcess id="Activity_0p4v3n6" name="Validate OAuth Task">
-      <bpmn:intermediateCatchEvent id="Event_14jps2n" name="Validate User">
-        <bpmn:outgoing>Flow_00drfq3</bpmn:outgoing>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_0ri8r2a" />
-      </bpmn:intermediateCatchEvent>
-      <bpmn:serviceTask id="Activity_1qj0res" name="Retrieves OAuth token from database by user ID">
-        <bpmn:incoming>Flow_00drfq3</bpmn:incoming>
-        <bpmn:outgoing>Flow_03ro5qr</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_11tcrti">
-          <bpmn:targetRef>DataStoreReference_1dd8518</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-      </bpmn:serviceTask>
-      <bpmn:sequenceFlow id="Flow_00drfq3" sourceRef="Event_14jps2n" targetRef="Activity_1qj0res" />
-      <bpmn:dataStoreReference id="DataStoreReference_1dd8518" name="AuthToken Table" />
-      <bpmn:exclusiveGateway id="Gateway_00xa3in" name="OAuth Token found?">
-        <bpmn:incoming>Flow_03ro5qr</bpmn:incoming>
-        <bpmn:outgoing>Flow_1b2h960</bpmn:outgoing>
-        <bpmn:outgoing>Flow_0qarqf9</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_03ro5qr" sourceRef="Activity_1qj0res" targetRef="Gateway_00xa3in" />
-      <bpmn:endEvent id="Event_1t0c599" name="User Validation Failed">
-        <bpmn:incoming>Flow_1b2h960</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_1b2h960" name="No" sourceRef="Gateway_00xa3in" targetRef="Event_1t0c599" />
-      <bpmn:exclusiveGateway id="Gateway_04sfs1w" name="Provided OAuth equal to one in database?">
-        <bpmn:incoming>Flow_0qarqf9</bpmn:incoming>
-        <bpmn:outgoing>Flow_1r4evzi</bpmn:outgoing>
-        <bpmn:outgoing>Flow_12w878f</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_0qarqf9" name="Yes" sourceRef="Gateway_00xa3in" targetRef="Gateway_04sfs1w" />
-      <bpmn:endEvent id="Event_14w6ud1" name="User Validation Failed">
-        <bpmn:incoming>Flow_1r4evzi</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_1r4evzi" name="No" sourceRef="Gateway_04sfs1w" targetRef="Event_14w6ud1" />
-      <bpmn:exclusiveGateway id="Gateway_1vw60ee" name="Validation time within 30 minutes?">
-        <bpmn:incoming>Flow_12w878f</bpmn:incoming>
-        <bpmn:outgoing>Flow_0r0dqps</bpmn:outgoing>
-        <bpmn:outgoing>Flow_0gsx9e7</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_12w878f" name="Yes" sourceRef="Gateway_04sfs1w" targetRef="Gateway_1vw60ee" />
-      <bpmn:endEvent id="Event_0kto2bg" name="User Validation Failed">
-        <bpmn:incoming>Flow_0r0dqps</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0r0dqps" name="No" sourceRef="Gateway_1vw60ee" targetRef="Event_0kto2bg" />
-      <bpmn:sequenceFlow id="Flow_0gsx9e7" name="Yes" sourceRef="Gateway_1vw60ee" targetRef="Event_0euetsa" />
-      <bpmn:endEvent id="Event_0euetsa" name="Validated User">
-        <bpmn:incoming>Flow_0gsx9e7</bpmn:incoming>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_0k67u4c" />
-      </bpmn:endEvent>
-    </bpmn:subProcess>
-    <bpmn:subProcess id="Activity_05sbuo9" name="Log Out Task">
-      <bpmn:serviceTask id="Activity_1dx65r8" name="Remove OAuth Token">
-        <bpmn:incoming>Flow_0se9hry</bpmn:incoming>
-        <bpmn:outgoing>Flow_115ekdf</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_0ha33p2">
-          <bpmn:targetRef>DataStoreReference_0d1qhjw</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-      </bpmn:serviceTask>
-      <bpmn:sequenceFlow id="Flow_115ekdf" sourceRef="Activity_1dx65r8" targetRef="Event_01umcf9" />
-      <bpmn:serviceTask id="Activity_1rr8dte" name="Retrieves user from database by user ID">
-        <bpmn:incoming>Flow_0p4640j</bpmn:incoming>
-        <bpmn:outgoing>Flow_058d8xh</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_1mlswjl">
-          <bpmn:targetRef>DataStoreReference_1017yf5</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-      </bpmn:serviceTask>
-      <bpmn:sequenceFlow id="Flow_0p4640j" sourceRef="Event_1opr4wx" targetRef="Activity_1rr8dte" />
-      <bpmn:dataStoreReference id="DataStoreReference_1017yf5" name="Users Table" />
-      <bpmn:exclusiveGateway id="Gateway_1h2pra4" name="User Found?">
-        <bpmn:incoming>Flow_058d8xh</bpmn:incoming>
-        <bpmn:outgoing>Flow_0gp6puh</bpmn:outgoing>
-        <bpmn:outgoing>Flow_0se9hry</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_058d8xh" sourceRef="Activity_1rr8dte" targetRef="Gateway_1h2pra4" />
-      <bpmn:endEvent id="Event_1is5w5q" name="Do nothing">
-        <bpmn:incoming>Flow_0gp6puh</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0gp6puh" name="No" sourceRef="Gateway_1h2pra4" targetRef="Event_1is5w5q" />
-      <bpmn:sequenceFlow id="Flow_0se9hry" name="Yes" sourceRef="Gateway_1h2pra4" targetRef="Activity_1dx65r8" />
-      <bpmn:dataStoreReference id="DataStoreReference_0d1qhjw" name="AuthToken Table" />
-      <bpmn:intermediateCatchEvent id="Event_1opr4wx" name="Log Out">
-        <bpmn:outgoing>Flow_0p4640j</bpmn:outgoing>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_1b6lnff" />
-      </bpmn:intermediateCatchEvent>
-      <bpmn:endEvent id="Event_01umcf9" name="User Logged&#10;Out">
-        <bpmn:incoming>Flow_115ekdf</bpmn:incoming>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_13ufmpz" />
-      </bpmn:endEvent>
-    </bpmn:subProcess>
-    <bpmn:subProcess id="Activity_1lafk72" name="Log In Task">
-      <bpmn:exclusiveGateway id="Gateway_0yjp1ck" name="User Found?">
-        <bpmn:incoming>Flow_0p259vl</bpmn:incoming>
-        <bpmn:outgoing>Flow_0hef00z</bpmn:outgoing>
-        <bpmn:outgoing>Flow_1xfgzwo</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:endEvent id="Event_1wk9mdi" name="Credentials Rejected">
-        <bpmn:incoming>Flow_0hef00z</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0hef00z" name="No" sourceRef="Gateway_0yjp1ck" targetRef="Event_1wk9mdi" />
-      <bpmn:sequenceFlow id="Flow_0tri860" sourceRef="Event_1xhzc6h" targetRef="Activity_0ihalpm" />
-      <bpmn:sequenceFlow id="Flow_0p259vl" sourceRef="Activity_0ihalpm" targetRef="Gateway_0yjp1ck" />
-      <bpmn:dataStoreReference id="DataStoreReference_0c6rhqp" name="Users Table" />
-      <bpmn:serviceTask id="Activity_0ihalpm" name="Retrieve user credentials from database by handle (username).">
-        <bpmn:incoming>Flow_0tri860</bpmn:incoming>
-        <bpmn:outgoing>Flow_0p259vl</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_1opg0za">
-          <bpmn:targetRef>DataStoreReference_0c6rhqp</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-      </bpmn:serviceTask>
-      <bpmn:exclusiveGateway id="Gateway_0ycr90g" name="Correct Password?">
-        <bpmn:incoming>Flow_1xfgzwo</bpmn:incoming>
-        <bpmn:outgoing>Flow_0aaq2hg</bpmn:outgoing>
-        <bpmn:outgoing>Flow_0ls4tu8</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_1xfgzwo" name="Yes" sourceRef="Gateway_0yjp1ck" targetRef="Gateway_0ycr90g" />
-      <bpmn:sequenceFlow id="Flow_0aaq2hg" name="Yes" sourceRef="Gateway_0ycr90g" targetRef="Activity_0m437x6" />
-      <bpmn:endEvent id="Event_1sndop3" name="Credentials Rejected">
-        <bpmn:incoming>Flow_0ls4tu8</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0ls4tu8" name="No" sourceRef="Gateway_0ycr90g" targetRef="Event_1sndop3" />
-      <bpmn:sendTask id="Activity_0m437x6" name="Generate a new OAuth Token for the user">
-        <bpmn:incoming>Flow_0aaq2hg</bpmn:incoming>
-        <bpmn:outgoing>Flow_0d6sumr</bpmn:outgoing>
-      </bpmn:sendTask>
-      <bpmn:sequenceFlow id="Flow_0d6sumr" sourceRef="Activity_0m437x6" targetRef="Event_0lw9fjm" />
-      <bpmn:intermediateCatchEvent id="Event_1xhzc6h" name="Log In&#10;&#10;">
-        <bpmn:outgoing>Flow_0tri860</bpmn:outgoing>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_0mw6tky" />
-      </bpmn:intermediateCatchEvent>
-      <bpmn:endEvent id="Event_0lw9fjm" name="Successful&#10;Login">
-        <bpmn:incoming>Flow_0d6sumr</bpmn:incoming>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_158owec" />
-      </bpmn:endEvent>
-    </bpmn:subProcess>
     <bpmn:subProcess id="Activity_0vdz86d" name="OAuth Task">
       <bpmn:sequenceFlow id="Flow_0jht6h9" sourceRef="Activity_072j46u" targetRef="Gateway_00enckv" />
       <bpmn:serviceTask id="Activity_072j46u" name="Check for current OAuth token">
@@ -213,6 +79,140 @@
       </bpmn:endEvent>
       <bpmn:dataStoreReference id="DataStoreReference_06fueqa" name="AuthToken Table" />
     </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_1lafk72" name="Log In Task">
+      <bpmn:exclusiveGateway id="Gateway_0yjp1ck" name="User Found?">
+        <bpmn:incoming>Flow_0p259vl</bpmn:incoming>
+        <bpmn:outgoing>Flow_0hef00z</bpmn:outgoing>
+        <bpmn:outgoing>Flow_1xfgzwo</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:endEvent id="Event_1wk9mdi" name="Credentials Rejected">
+        <bpmn:incoming>Flow_0hef00z</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0hef00z" name="No" sourceRef="Gateway_0yjp1ck" targetRef="Event_1wk9mdi" />
+      <bpmn:sequenceFlow id="Flow_0tri860" sourceRef="Event_1xhzc6h" targetRef="Activity_0ihalpm" />
+      <bpmn:sequenceFlow id="Flow_0p259vl" sourceRef="Activity_0ihalpm" targetRef="Gateway_0yjp1ck" />
+      <bpmn:dataStoreReference id="DataStoreReference_0c6rhqp" name="Users Table" />
+      <bpmn:serviceTask id="Activity_0ihalpm" name="Retrieve user credentials from database by handle (username).">
+        <bpmn:incoming>Flow_0tri860</bpmn:incoming>
+        <bpmn:outgoing>Flow_0p259vl</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_1opg0za">
+          <bpmn:targetRef>DataStoreReference_0c6rhqp</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+      </bpmn:serviceTask>
+      <bpmn:exclusiveGateway id="Gateway_0ycr90g" name="Correct Password?">
+        <bpmn:incoming>Flow_1xfgzwo</bpmn:incoming>
+        <bpmn:outgoing>Flow_0aaq2hg</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0ls4tu8</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_1xfgzwo" name="Yes" sourceRef="Gateway_0yjp1ck" targetRef="Gateway_0ycr90g" />
+      <bpmn:sequenceFlow id="Flow_0aaq2hg" name="Yes" sourceRef="Gateway_0ycr90g" targetRef="Activity_0m437x6" />
+      <bpmn:endEvent id="Event_1sndop3" name="Credentials Rejected">
+        <bpmn:incoming>Flow_0ls4tu8</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0ls4tu8" name="No" sourceRef="Gateway_0ycr90g" targetRef="Event_1sndop3" />
+      <bpmn:sendTask id="Activity_0m437x6" name="Generate a new OAuth Token for the user">
+        <bpmn:incoming>Flow_0aaq2hg</bpmn:incoming>
+        <bpmn:outgoing>Flow_0d6sumr</bpmn:outgoing>
+      </bpmn:sendTask>
+      <bpmn:sequenceFlow id="Flow_0d6sumr" sourceRef="Activity_0m437x6" targetRef="Event_0lw9fjm" />
+      <bpmn:intermediateCatchEvent id="Event_1xhzc6h" name="Log In&#10;&#10;">
+        <bpmn:outgoing>Flow_0tri860</bpmn:outgoing>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_0mw6tky" />
+      </bpmn:intermediateCatchEvent>
+      <bpmn:endEvent id="Event_0lw9fjm" name="Successful&#10;Login">
+        <bpmn:incoming>Flow_0d6sumr</bpmn:incoming>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_158owec" />
+      </bpmn:endEvent>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_05sbuo9" name="Log Out Task">
+      <bpmn:serviceTask id="Activity_1dx65r8" name="Remove OAuth Token">
+        <bpmn:incoming>Flow_0se9hry</bpmn:incoming>
+        <bpmn:outgoing>Flow_115ekdf</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_0ha33p2">
+          <bpmn:targetRef>DataStoreReference_0d1qhjw</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_115ekdf" sourceRef="Activity_1dx65r8" targetRef="Event_01umcf9" />
+      <bpmn:serviceTask id="Activity_1rr8dte" name="Retrieves user from database by user ID">
+        <bpmn:incoming>Flow_0p4640j</bpmn:incoming>
+        <bpmn:outgoing>Flow_058d8xh</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_1mlswjl">
+          <bpmn:targetRef>DataStoreReference_1017yf5</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_0p4640j" sourceRef="Event_1opr4wx" targetRef="Activity_1rr8dte" />
+      <bpmn:dataStoreReference id="DataStoreReference_1017yf5" name="Users Table" />
+      <bpmn:exclusiveGateway id="Gateway_1h2pra4" name="User Found?">
+        <bpmn:incoming>Flow_058d8xh</bpmn:incoming>
+        <bpmn:outgoing>Flow_0gp6puh</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0se9hry</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_058d8xh" sourceRef="Activity_1rr8dte" targetRef="Gateway_1h2pra4" />
+      <bpmn:endEvent id="Event_1is5w5q" name="Do nothing">
+        <bpmn:incoming>Flow_0gp6puh</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0gp6puh" name="No" sourceRef="Gateway_1h2pra4" targetRef="Event_1is5w5q" />
+      <bpmn:sequenceFlow id="Flow_0se9hry" name="Yes" sourceRef="Gateway_1h2pra4" targetRef="Activity_1dx65r8" />
+      <bpmn:dataStoreReference id="DataStoreReference_0d1qhjw" name="AuthToken Table" />
+      <bpmn:intermediateCatchEvent id="Event_1opr4wx" name="Log Out">
+        <bpmn:outgoing>Flow_0p4640j</bpmn:outgoing>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_1b6lnff" />
+      </bpmn:intermediateCatchEvent>
+      <bpmn:endEvent id="Event_01umcf9" name="User Logged&#10;Out">
+        <bpmn:incoming>Flow_115ekdf</bpmn:incoming>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_13ufmpz" />
+      </bpmn:endEvent>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_0p4v3n6" name="Validate OAuth Task">
+      <bpmn:intermediateCatchEvent id="Event_14jps2n" name="Validate User">
+        <bpmn:outgoing>Flow_00drfq3</bpmn:outgoing>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_0ri8r2a" />
+      </bpmn:intermediateCatchEvent>
+      <bpmn:serviceTask id="Activity_1qj0res" name="Retrieves OAuth token from database by user ID">
+        <bpmn:incoming>Flow_00drfq3</bpmn:incoming>
+        <bpmn:outgoing>Flow_03ro5qr</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_11tcrti">
+          <bpmn:targetRef>DataStoreReference_1dd8518</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_00drfq3" sourceRef="Event_14jps2n" targetRef="Activity_1qj0res" />
+      <bpmn:dataStoreReference id="DataStoreReference_1dd8518" name="AuthToken Table" />
+      <bpmn:exclusiveGateway id="Gateway_00xa3in" name="OAuth Token found?">
+        <bpmn:incoming>Flow_03ro5qr</bpmn:incoming>
+        <bpmn:outgoing>Flow_1b2h960</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0qarqf9</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_03ro5qr" sourceRef="Activity_1qj0res" targetRef="Gateway_00xa3in" />
+      <bpmn:endEvent id="Event_1t0c599" name="User Validation Failed">
+        <bpmn:incoming>Flow_1b2h960</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_1b2h960" name="No" sourceRef="Gateway_00xa3in" targetRef="Event_1t0c599" />
+      <bpmn:exclusiveGateway id="Gateway_04sfs1w" name="Provided OAuth equal to one in database?">
+        <bpmn:incoming>Flow_0qarqf9</bpmn:incoming>
+        <bpmn:outgoing>Flow_1r4evzi</bpmn:outgoing>
+        <bpmn:outgoing>Flow_12w878f</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_0qarqf9" name="Yes" sourceRef="Gateway_00xa3in" targetRef="Gateway_04sfs1w" />
+      <bpmn:endEvent id="Event_14w6ud1" name="User Validation Failed">
+        <bpmn:incoming>Flow_1r4evzi</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_1r4evzi" name="No" sourceRef="Gateway_04sfs1w" targetRef="Event_14w6ud1" />
+      <bpmn:exclusiveGateway id="Gateway_1vw60ee" name="Validation time within 30 minutes?">
+        <bpmn:incoming>Flow_12w878f</bpmn:incoming>
+        <bpmn:outgoing>Flow_0r0dqps</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0gsx9e7</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_12w878f" name="Yes" sourceRef="Gateway_04sfs1w" targetRef="Gateway_1vw60ee" />
+      <bpmn:endEvent id="Event_0kto2bg" name="User Validation Failed">
+        <bpmn:incoming>Flow_0r0dqps</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0r0dqps" name="No" sourceRef="Gateway_1vw60ee" targetRef="Event_0kto2bg" />
+      <bpmn:sequenceFlow id="Flow_0gsx9e7" name="Yes" sourceRef="Gateway_1vw60ee" targetRef="Event_0euetsa" />
+      <bpmn:endEvent id="Event_0euetsa" name="Validated User">
+        <bpmn:incoming>Flow_0gsx9e7</bpmn:incoming>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_0k67u4c" />
+      </bpmn:endEvent>
+    </bpmn:subProcess>
   </bpmn:process>
   <bpmn:process id="Process_0lx6t0l" isExecutable="false">
     <bpmn:laneSet id="LaneSet_1tqciza">
@@ -223,126 +223,39 @@
         <bpmn:flowNodeRef>Activity_1s1550a</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:subProcess id="Activity_03ldc48" name="Get Feed Task">
-      <bpmn:startEvent id="Event_18egtmv" name="Get Feed">
-        <bpmn:outgoing>Flow_0gzajdh</bpmn:outgoing>
+    <bpmn:subProcess id="Activity_1s1550a" name="Post Creation Task">
+      <bpmn:startEvent id="Event_0ta4tov" name="Create Post">
+        <bpmn:outgoing>Flow_16pfgml</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:subProcess id="Activity_10qo0rg">
-        <bpmn:incoming>Flow_01xjyhh</bpmn:incoming>
-        <bpmn:outgoing>Flow_1dsninu</bpmn:outgoing>
-        <bpmn:startEvent id="Event_0rirl2i" name="Single Post">
-          <bpmn:outgoing>Flow_1uafm5i</bpmn:outgoing>
-        </bpmn:startEvent>
-        <bpmn:sequenceFlow id="Flow_1uafm5i" sourceRef="Event_0rirl2i" targetRef="Activity_07y6tpp" />
-        <bpmn:serviceTask id="Activity_07y6tpp" name="Retrieve and organize post information">
-          <bpmn:incoming>Flow_1uafm5i</bpmn:incoming>
-          <bpmn:outgoing>Flow_1hemkax</bpmn:outgoing>
-        </bpmn:serviceTask>
-        <bpmn:sequenceFlow id="Flow_1hemkax" sourceRef="Activity_07y6tpp" targetRef="Event_00go4it" />
-        <bpmn:endEvent id="Event_00go4it" name="Organized Post">
-          <bpmn:incoming>Flow_1hemkax</bpmn:incoming>
-        </bpmn:endEvent>
-      </bpmn:subProcess>
-      <bpmn:sequenceFlow id="Flow_01xjyhh" sourceRef="Activity_0fh7xl3" targetRef="Activity_10qo0rg" />
-      <bpmn:serviceTask id="Activity_0fh7xl3" name="Organize based on relevancy (recent date posted)">
-        <bpmn:incoming>Flow_0rz1aq4</bpmn:incoming>
-        <bpmn:outgoing>Flow_01xjyhh</bpmn:outgoing>
-      </bpmn:serviceTask>
-      <bpmn:serviceTask id="Activity_1szigrw" name="Collect all new posts from users">
-        <bpmn:incoming>Flow_1abprr1</bpmn:incoming>
-        <bpmn:outgoing>Flow_0rz1aq4</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_1yi83p7">
-          <bpmn:targetRef>DataStoreReference_19vnnbx</bpmn:targetRef>
+      <bpmn:intermediateThrowEvent id="Event_18fika5" name="Validate User">
+        <bpmn:incoming>Flow_16pfgml</bpmn:incoming>
+        <bpmn:outgoing>Flow_0gcjozn</bpmn:outgoing>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_1t4y5t1" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:exclusiveGateway id="Gateway_14i3zdv" name="Valid User Oauth?">
+        <bpmn:incoming>Flow_0gcjozn</bpmn:incoming>
+        <bpmn:outgoing>Flow_10h0tjd</bpmn:outgoing>
+        <bpmn:outgoing>Flow_123zh86</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:serviceTask id="Activity_1o5ss4l" name="Retrieve relevant information about the post and store">
+        <bpmn:incoming>Flow_123zh86</bpmn:incoming>
+        <bpmn:outgoing>Flow_1rdqv0l</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_0i1m6sd">
+          <bpmn:targetRef>DataStoreReference_12u9ijt</bpmn:targetRef>
         </bpmn:dataOutputAssociation>
       </bpmn:serviceTask>
-      <bpmn:dataStoreReference id="DataStoreReference_19vnnbx" name="Posts Table" />
-      <bpmn:sequenceFlow id="Flow_0gzajdh" sourceRef="Event_18egtmv" targetRef="Event_1uea4n0" />
-      <bpmn:intermediateThrowEvent id="Event_1uea4n0" name="Validate User">
-        <bpmn:incoming>Flow_0gzajdh</bpmn:incoming>
-        <bpmn:outgoing>Flow_0h91kch</bpmn:outgoing>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_1gybkpl" />
-      </bpmn:intermediateThrowEvent>
-      <bpmn:sequenceFlow id="Flow_0rz1aq4" sourceRef="Activity_1szigrw" targetRef="Activity_0fh7xl3" />
-      <bpmn:exclusiveGateway id="Gateway_0vveoga" name="Valid User Oauth?">
-        <bpmn:incoming>Flow_0h91kch</bpmn:incoming>
-        <bpmn:outgoing>Flow_1abprr1</bpmn:outgoing>
-        <bpmn:outgoing>Flow_1v7ahop</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_0h91kch" sourceRef="Event_1uea4n0" targetRef="Gateway_0vveoga" />
-      <bpmn:sequenceFlow id="Flow_1abprr1" name="Yes" sourceRef="Gateway_0vveoga" targetRef="Activity_1szigrw" />
-      <bpmn:endEvent id="Event_1k3gsf9" name="Organized Feed">
-        <bpmn:incoming>Flow_1dsninu</bpmn:incoming>
+      <bpmn:dataStoreReference id="DataStoreReference_12u9ijt" name="Posts Table" />
+      <bpmn:endEvent id="Event_074zerw" name="Create Successful">
+        <bpmn:incoming>Flow_1rdqv0l</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_1dsninu" sourceRef="Activity_10qo0rg" targetRef="Event_1k3gsf9" />
-      <bpmn:sequenceFlow id="Flow_1v7ahop" name="No" sourceRef="Gateway_0vveoga" targetRef="Event_0o01m1l" />
-      <bpmn:intermediateThrowEvent id="Event_0o01m1l" name="Log Out">
-        <bpmn:incoming>Flow_1v7ahop</bpmn:incoming>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_18g4r6z" />
-      </bpmn:intermediateThrowEvent>
-      <bpmn:association id="Association_16n3fpi" sourceRef="Activity_10qo0rg" targetRef="TextAnnotation_00gnvvk" />
-      <bpmn:textAnnotation id="TextAnnotation_00gnvvk">
-        <bpmn:text>for each single user post</bpmn:text>
-      </bpmn:textAnnotation>
-    </bpmn:subProcess>
-    <bpmn:subProcess id="Activity_1ve5kyy" name="Post Interaction Task">
-      <bpmn:exclusiveGateway id="Gateway_0u4hcsx" name="Like post?">
-        <bpmn:incoming>Flow_1qiqvog</bpmn:incoming>
-        <bpmn:outgoing>Flow_1tvmdwk</bpmn:outgoing>
-        <bpmn:outgoing>Flow_0l7tp43</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_1tvmdwk" name="Yes" sourceRef="Gateway_0u4hcsx" targetRef="Activity_1ki37i3" />
-      <bpmn:serviceTask id="Activity_1ki37i3" name="Increment the likes of the post and send notification">
-        <bpmn:incoming>Flow_1tvmdwk</bpmn:incoming>
-        <bpmn:outgoing>Flow_0a8ubkb</bpmn:outgoing>
-        <bpmn:outgoing>Flow_1vc0lj5</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_1gb3l0j">
-          <bpmn:targetRef>DataStoreReference_1338sef</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-      </bpmn:serviceTask>
-      <bpmn:dataStoreReference id="DataStoreReference_1338sef" name="Posts Table" />
-      <bpmn:endEvent id="Event_02eyofm" name="Successful Post Interaction">
-        <bpmn:incoming>Flow_1vc0lj5</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:endEvent id="Event_0vnm4rn" name="Do nothing">
-        <bpmn:incoming>Flow_1h4ei63</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:exclusiveGateway id="Gateway_15mciax" name="User Interacting with post?">
-        <bpmn:incoming>Flow_1d9it15</bpmn:incoming>
-        <bpmn:outgoing>Flow_1h4ei63</bpmn:outgoing>
-        <bpmn:outgoing>Flow_1qiqvog</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:startEvent id="Event_1axx7ua" name="Post Interaction">
-        <bpmn:outgoing>Flow_0jhdukp</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:sequenceFlow id="Flow_1h4ei63" name="No" sourceRef="Gateway_15mciax" targetRef="Event_0vnm4rn" />
-      <bpmn:sequenceFlow id="Flow_1qiqvog" name="Yes" sourceRef="Gateway_15mciax" targetRef="Gateway_0u4hcsx" />
-      <bpmn:intermediateThrowEvent id="Event_1r74sy6" name="Validate User">
-        <bpmn:incoming>Flow_0jhdukp</bpmn:incoming>
-        <bpmn:outgoing>Flow_0ewtpu7</bpmn:outgoing>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_0wbrhui" />
-      </bpmn:intermediateThrowEvent>
-      <bpmn:exclusiveGateway id="Gateway_1at7wlm" name="Valid User Oauth?">
-        <bpmn:incoming>Flow_0ewtpu7</bpmn:incoming>
-        <bpmn:outgoing>Flow_1mlhz90</bpmn:outgoing>
-        <bpmn:outgoing>Flow_1d9it15</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_0jhdukp" sourceRef="Event_1axx7ua" targetRef="Event_1r74sy6" />
-      <bpmn:sequenceFlow id="Flow_0ewtpu7" sourceRef="Event_1r74sy6" targetRef="Gateway_1at7wlm" />
-      <bpmn:sequenceFlow id="Flow_1mlhz90" name="No" sourceRef="Gateway_1at7wlm" targetRef="Event_1wmkwb9" />
-      <bpmn:sequenceFlow id="Flow_1d9it15" name="Yes" sourceRef="Gateway_1at7wlm" targetRef="Gateway_15mciax" />
-      <bpmn:sequenceFlow id="Flow_0a8ubkb" sourceRef="Activity_1ki37i3" targetRef="Event_0ebtbfl" />
-      <bpmn:endEvent id="Event_0uh5app" name="Do nothing">
-        <bpmn:incoming>Flow_0l7tp43</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0l7tp43" name="No" sourceRef="Gateway_0u4hcsx" targetRef="Event_0uh5app" />
-      <bpmn:intermediateThrowEvent id="Event_0ebtbfl" name="Send&#10;Notification">
-        <bpmn:incoming>Flow_0a8ubkb</bpmn:incoming>
-        <bpmn:messageEventDefinition id="MessageEventDefinition_01nt61w" />
-      </bpmn:intermediateThrowEvent>
-      <bpmn:sequenceFlow id="Flow_1vc0lj5" sourceRef="Activity_1ki37i3" targetRef="Event_02eyofm" />
-      <bpmn:intermediateThrowEvent id="Event_1wmkwb9" name="Log Out">
-        <bpmn:incoming>Flow_1mlhz90</bpmn:incoming>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_0frdab3" />
+      <bpmn:sequenceFlow id="Flow_16pfgml" sourceRef="Event_0ta4tov" targetRef="Event_18fika5" />
+      <bpmn:sequenceFlow id="Flow_0gcjozn" sourceRef="Event_18fika5" targetRef="Gateway_14i3zdv" />
+      <bpmn:sequenceFlow id="Flow_10h0tjd" name="No" sourceRef="Gateway_14i3zdv" targetRef="Event_181bq1n" />
+      <bpmn:sequenceFlow id="Flow_1rdqv0l" sourceRef="Activity_1o5ss4l" targetRef="Event_074zerw" />
+      <bpmn:sequenceFlow id="Flow_123zh86" name="Yes" sourceRef="Gateway_14i3zdv" targetRef="Activity_1o5ss4l" />
+      <bpmn:intermediateThrowEvent id="Event_181bq1n" name="Log Out">
+        <bpmn:incoming>Flow_10h0tjd</bpmn:incoming>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_1vh31tv" />
       </bpmn:intermediateThrowEvent>
     </bpmn:subProcess>
     <bpmn:subProcess id="Activity_0dysc51" name="Post Modify Task">
@@ -420,60 +333,194 @@
         <bpmn:signalEventDefinition id="SignalEventDefinition_0qhqxek" />
       </bpmn:intermediateThrowEvent>
     </bpmn:subProcess>
-    <bpmn:subProcess id="Activity_1s1550a" name="Post Creation Task">
-      <bpmn:startEvent id="Event_0ta4tov" name="Create Post">
-        <bpmn:outgoing>Flow_16pfgml</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:intermediateThrowEvent id="Event_18fika5" name="Validate User">
-        <bpmn:incoming>Flow_16pfgml</bpmn:incoming>
-        <bpmn:outgoing>Flow_0gcjozn</bpmn:outgoing>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_1t4y5t1" />
-      </bpmn:intermediateThrowEvent>
-      <bpmn:exclusiveGateway id="Gateway_14i3zdv" name="Valid User Oauth?">
-        <bpmn:incoming>Flow_0gcjozn</bpmn:incoming>
-        <bpmn:outgoing>Flow_10h0tjd</bpmn:outgoing>
-        <bpmn:outgoing>Flow_123zh86</bpmn:outgoing>
+    <bpmn:subProcess id="Activity_1ve5kyy" name="Post Interaction Task">
+      <bpmn:exclusiveGateway id="Gateway_0u4hcsx" name="Like post?">
+        <bpmn:incoming>Flow_1qiqvog</bpmn:incoming>
+        <bpmn:outgoing>Flow_1tvmdwk</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0l7tp43</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:serviceTask id="Activity_1o5ss4l" name="Retrieve relevant information about the post and store">
-        <bpmn:incoming>Flow_123zh86</bpmn:incoming>
-        <bpmn:outgoing>Flow_1rdqv0l</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_0i1m6sd">
-          <bpmn:targetRef>DataStoreReference_12u9ijt</bpmn:targetRef>
+      <bpmn:sequenceFlow id="Flow_1tvmdwk" name="Yes" sourceRef="Gateway_0u4hcsx" targetRef="Activity_1ki37i3" />
+      <bpmn:serviceTask id="Activity_1ki37i3" name="Increment the likes of the post and send notification">
+        <bpmn:incoming>Flow_1tvmdwk</bpmn:incoming>
+        <bpmn:outgoing>Flow_0a8ubkb</bpmn:outgoing>
+        <bpmn:outgoing>Flow_1vc0lj5</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_1gb3l0j">
+          <bpmn:targetRef>DataStoreReference_1338sef</bpmn:targetRef>
         </bpmn:dataOutputAssociation>
       </bpmn:serviceTask>
-      <bpmn:dataStoreReference id="DataStoreReference_12u9ijt" name="Posts Table" />
-      <bpmn:endEvent id="Event_074zerw" name="Create Successful">
-        <bpmn:incoming>Flow_1rdqv0l</bpmn:incoming>
+      <bpmn:dataStoreReference id="DataStoreReference_1338sef" name="Posts Table" />
+      <bpmn:endEvent id="Event_02eyofm" name="Successful Post Interaction">
+        <bpmn:incoming>Flow_1vc0lj5</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_16pfgml" sourceRef="Event_0ta4tov" targetRef="Event_18fika5" />
-      <bpmn:sequenceFlow id="Flow_0gcjozn" sourceRef="Event_18fika5" targetRef="Gateway_14i3zdv" />
-      <bpmn:sequenceFlow id="Flow_10h0tjd" name="No" sourceRef="Gateway_14i3zdv" targetRef="Event_181bq1n" />
-      <bpmn:sequenceFlow id="Flow_1rdqv0l" sourceRef="Activity_1o5ss4l" targetRef="Event_074zerw" />
-      <bpmn:sequenceFlow id="Flow_123zh86" name="Yes" sourceRef="Gateway_14i3zdv" targetRef="Activity_1o5ss4l" />
-      <bpmn:intermediateThrowEvent id="Event_181bq1n" name="Log Out">
-        <bpmn:incoming>Flow_10h0tjd</bpmn:incoming>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_1vh31tv" />
+      <bpmn:endEvent id="Event_0vnm4rn" name="Do nothing">
+        <bpmn:incoming>Flow_1h4ei63</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:exclusiveGateway id="Gateway_15mciax" name="User Interacting with post?">
+        <bpmn:incoming>Flow_1d9it15</bpmn:incoming>
+        <bpmn:outgoing>Flow_1h4ei63</bpmn:outgoing>
+        <bpmn:outgoing>Flow_1qiqvog</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:startEvent id="Event_1axx7ua" name="Post Interaction">
+        <bpmn:outgoing>Flow_0jhdukp</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:sequenceFlow id="Flow_1h4ei63" name="No" sourceRef="Gateway_15mciax" targetRef="Event_0vnm4rn" />
+      <bpmn:sequenceFlow id="Flow_1qiqvog" name="Yes" sourceRef="Gateway_15mciax" targetRef="Gateway_0u4hcsx" />
+      <bpmn:intermediateThrowEvent id="Event_1r74sy6" name="Validate User">
+        <bpmn:incoming>Flow_0jhdukp</bpmn:incoming>
+        <bpmn:outgoing>Flow_0ewtpu7</bpmn:outgoing>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_0wbrhui" />
       </bpmn:intermediateThrowEvent>
+      <bpmn:exclusiveGateway id="Gateway_1at7wlm" name="Valid User Oauth?">
+        <bpmn:incoming>Flow_0ewtpu7</bpmn:incoming>
+        <bpmn:outgoing>Flow_1mlhz90</bpmn:outgoing>
+        <bpmn:outgoing>Flow_1d9it15</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_0jhdukp" sourceRef="Event_1axx7ua" targetRef="Event_1r74sy6" />
+      <bpmn:sequenceFlow id="Flow_0ewtpu7" sourceRef="Event_1r74sy6" targetRef="Gateway_1at7wlm" />
+      <bpmn:sequenceFlow id="Flow_1mlhz90" name="No" sourceRef="Gateway_1at7wlm" targetRef="Event_1wmkwb9" />
+      <bpmn:sequenceFlow id="Flow_1d9it15" name="Yes" sourceRef="Gateway_1at7wlm" targetRef="Gateway_15mciax" />
+      <bpmn:sequenceFlow id="Flow_0a8ubkb" sourceRef="Activity_1ki37i3" targetRef="Event_0ebtbfl" />
+      <bpmn:endEvent id="Event_0uh5app" name="Do nothing">
+        <bpmn:incoming>Flow_0l7tp43</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0l7tp43" name="No" sourceRef="Gateway_0u4hcsx" targetRef="Event_0uh5app" />
+      <bpmn:intermediateThrowEvent id="Event_0ebtbfl" name="Send&#10;Notification">
+        <bpmn:incoming>Flow_0a8ubkb</bpmn:incoming>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_01nt61w" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:sequenceFlow id="Flow_1vc0lj5" sourceRef="Activity_1ki37i3" targetRef="Event_02eyofm" />
+      <bpmn:intermediateThrowEvent id="Event_1wmkwb9" name="Log Out">
+        <bpmn:incoming>Flow_1mlhz90</bpmn:incoming>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_0frdab3" />
+      </bpmn:intermediateThrowEvent>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_03ldc48" name="Get Feed Task">
+      <bpmn:startEvent id="Event_18egtmv" name="Get Feed">
+        <bpmn:outgoing>Flow_0gzajdh</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:subProcess id="Activity_10qo0rg">
+        <bpmn:incoming>Flow_01xjyhh</bpmn:incoming>
+        <bpmn:outgoing>Flow_1dsninu</bpmn:outgoing>
+        <bpmn:startEvent id="Event_0rirl2i" name="Single Post">
+          <bpmn:outgoing>Flow_1uafm5i</bpmn:outgoing>
+        </bpmn:startEvent>
+        <bpmn:sequenceFlow id="Flow_1uafm5i" sourceRef="Event_0rirl2i" targetRef="Activity_07y6tpp" />
+        <bpmn:serviceTask id="Activity_07y6tpp" name="Retrieve and organize post information">
+          <bpmn:incoming>Flow_1uafm5i</bpmn:incoming>
+          <bpmn:outgoing>Flow_1hemkax</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1hemkax" sourceRef="Activity_07y6tpp" targetRef="Event_00go4it" />
+        <bpmn:endEvent id="Event_00go4it" name="Organized Post">
+          <bpmn:incoming>Flow_1hemkax</bpmn:incoming>
+        </bpmn:endEvent>
+      </bpmn:subProcess>
+      <bpmn:sequenceFlow id="Flow_01xjyhh" sourceRef="Activity_0fh7xl3" targetRef="Activity_10qo0rg" />
+      <bpmn:serviceTask id="Activity_0fh7xl3" name="Organize based on relevancy (recent date posted)">
+        <bpmn:incoming>Flow_0rz1aq4</bpmn:incoming>
+        <bpmn:outgoing>Flow_01xjyhh</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:serviceTask id="Activity_1szigrw" name="Collect all new posts from users">
+        <bpmn:incoming>Flow_1abprr1</bpmn:incoming>
+        <bpmn:outgoing>Flow_0rz1aq4</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_1yi83p7">
+          <bpmn:targetRef>DataStoreReference_19vnnbx</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+      </bpmn:serviceTask>
+      <bpmn:dataStoreReference id="DataStoreReference_19vnnbx" name="Posts Table" />
+      <bpmn:sequenceFlow id="Flow_0gzajdh" sourceRef="Event_18egtmv" targetRef="Event_1uea4n0" />
+      <bpmn:intermediateThrowEvent id="Event_1uea4n0" name="Validate User">
+        <bpmn:incoming>Flow_0gzajdh</bpmn:incoming>
+        <bpmn:outgoing>Flow_0h91kch</bpmn:outgoing>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_1gybkpl" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:sequenceFlow id="Flow_0rz1aq4" sourceRef="Activity_1szigrw" targetRef="Activity_0fh7xl3" />
+      <bpmn:exclusiveGateway id="Gateway_0vveoga" name="Valid User Oauth?">
+        <bpmn:incoming>Flow_0h91kch</bpmn:incoming>
+        <bpmn:outgoing>Flow_1abprr1</bpmn:outgoing>
+        <bpmn:outgoing>Flow_1v7ahop</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_0h91kch" sourceRef="Event_1uea4n0" targetRef="Gateway_0vveoga" />
+      <bpmn:sequenceFlow id="Flow_1abprr1" name="Yes" sourceRef="Gateway_0vveoga" targetRef="Activity_1szigrw" />
+      <bpmn:endEvent id="Event_1k3gsf9" name="Organized Feed">
+        <bpmn:incoming>Flow_1dsninu</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_1dsninu" sourceRef="Activity_10qo0rg" targetRef="Event_1k3gsf9" />
+      <bpmn:sequenceFlow id="Flow_1v7ahop" name="No" sourceRef="Gateway_0vveoga" targetRef="Event_0o01m1l" />
+      <bpmn:intermediateThrowEvent id="Event_0o01m1l" name="Log Out">
+        <bpmn:incoming>Flow_1v7ahop</bpmn:incoming>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_18g4r6z" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:association id="Association_16n3fpi" sourceRef="Activity_10qo0rg" targetRef="TextAnnotation_00gnvvk" />
+      <bpmn:textAnnotation id="TextAnnotation_00gnvvk">
+        <bpmn:text>for each single user post</bpmn:text>
+      </bpmn:textAnnotation>
     </bpmn:subProcess>
   </bpmn:process>
   <bpmn:process id="Process_1xsu99g" isExecutable="false">
-    <bpmn:serviceTask id="Activity_0i0nn8t" name="Add notification to database">
-      <bpmn:incoming>Flow_0c6a0sj</bpmn:incoming>
-      <bpmn:outgoing>Flow_0uadhx0</bpmn:outgoing>
-      <bpmn:dataOutputAssociation id="DataOutputAssociation_10mhi4d">
-        <bpmn:targetRef>DataStoreReference_1lmkcdp</bpmn:targetRef>
-      </bpmn:dataOutputAssociation>
-    </bpmn:serviceTask>
-    <bpmn:dataStoreReference id="DataStoreReference_1lmkcdp" name="Notification Table" />
-    <bpmn:endEvent id="Event_15jbej5" name="Notification&#10;Successful">
-      <bpmn:incoming>Flow_0uadhx0</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:intermediateCatchEvent id="Event_0jv8k2m" name="Notification&#10;Receive">
-      <bpmn:outgoing>Flow_0c6a0sj</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1g1cf2t" />
-    </bpmn:intermediateCatchEvent>
-    <bpmn:sequenceFlow id="Flow_0c6a0sj" sourceRef="Event_0jv8k2m" targetRef="Activity_0i0nn8t" />
-    <bpmn:sequenceFlow id="Flow_0uadhx0" sourceRef="Activity_0i0nn8t" targetRef="Event_15jbej5" />
+    <bpmn:subProcess id="Activity_1h6vp0a" name="Notification Receive Task">
+      <bpmn:intermediateCatchEvent id="Event_0jv8k2m" name="Notification&#10;Received from Message Queue">
+        <bpmn:outgoing>Flow_0c6a0sj</bpmn:outgoing>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_1g1cf2t" />
+      </bpmn:intermediateCatchEvent>
+      <bpmn:serviceTask id="Activity_0i0nn8t" name="Add notification to database">
+        <bpmn:incoming>Flow_0c6a0sj</bpmn:incoming>
+        <bpmn:outgoing>Flow_0uadhx0</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_10mhi4d">
+          <bpmn:targetRef>DataStoreReference_1lmkcdp</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+      </bpmn:serviceTask>
+      <bpmn:endEvent id="Event_15jbej5" name="Notification&#10;Successful">
+        <bpmn:incoming>Flow_0uadhx0</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:dataStoreReference id="DataStoreReference_1lmkcdp" name="Notification Table" />
+      <bpmn:sequenceFlow id="Flow_0c6a0sj" sourceRef="Event_0jv8k2m" targetRef="Activity_0i0nn8t" />
+      <bpmn:sequenceFlow id="Flow_0uadhx0" sourceRef="Activity_0i0nn8t" targetRef="Event_15jbej5" />
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_0gusdf5" name="Retrieve Notification Task">
+      <bpmn:startEvent id="Event_15n2kci" name="Retrieve Notification">
+        <bpmn:outgoing>Flow_0k0d9bl</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:intermediateThrowEvent id="Event_1szn3j0" name="Validate User">
+        <bpmn:incoming>Flow_0k0d9bl</bpmn:incoming>
+        <bpmn:outgoing>Flow_0sr8rqi</bpmn:outgoing>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_0d6o3ni" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:exclusiveGateway id="Gateway_08qzwwk" name="Valid User Oauth?">
+        <bpmn:incoming>Flow_0sr8rqi</bpmn:incoming>
+        <bpmn:outgoing>Flow_0ay3a0v</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0i1dj5y</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:serviceTask id="Activity_0ql0f92" name="Retrieve notifications of the given userID">
+        <bpmn:incoming>Flow_0k5xgyv</bpmn:incoming>
+        <bpmn:outgoing>Flow_09sb0ea</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_04oui83">
+          <bpmn:targetRef>DataStoreReference_090lrw6</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+      </bpmn:serviceTask>
+      <bpmn:dataStoreReference id="DataStoreReference_090lrw6" name="Notification Table" />
+      <bpmn:endEvent id="Event_1n6hccx" name="Successfully Retrieved Notifications">
+        <bpmn:incoming>Flow_09sb0ea</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:exclusiveGateway id="Gateway_0eu1kvu" name="Valid User?">
+        <bpmn:incoming>Flow_0i1dj5y</bpmn:incoming>
+        <bpmn:outgoing>Flow_0k5xgyv</bpmn:outgoing>
+        <bpmn:outgoing>Flow_17a5cu5</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:endEvent id="Event_0v4fb3b" name="Do nothing">
+        <bpmn:incoming>Flow_17a5cu5</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:intermediateThrowEvent id="Event_01e6h9m" name="Log Out">
+        <bpmn:incoming>Flow_0ay3a0v</bpmn:incoming>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_0v9kex8" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:sequenceFlow id="Flow_0k0d9bl" sourceRef="Event_15n2kci" targetRef="Event_1szn3j0" />
+      <bpmn:sequenceFlow id="Flow_0sr8rqi" sourceRef="Event_1szn3j0" targetRef="Gateway_08qzwwk" />
+      <bpmn:sequenceFlow id="Flow_0ay3a0v" name="No" sourceRef="Gateway_08qzwwk" targetRef="Event_01e6h9m" />
+      <bpmn:sequenceFlow id="Flow_0i1dj5y" name="Yes" sourceRef="Gateway_08qzwwk" targetRef="Gateway_0eu1kvu" />
+      <bpmn:sequenceFlow id="Flow_0k5xgyv" name="Yes" sourceRef="Gateway_0eu1kvu" targetRef="Activity_0ql0f92" />
+      <bpmn:sequenceFlow id="Flow_09sb0ea" sourceRef="Activity_0ql0f92" targetRef="Event_1n6hccx" />
+      <bpmn:sequenceFlow id="Flow_17a5cu5" name="No" sourceRef="Gateway_0eu1kvu" targetRef="Event_0v4fb3b" />
+    </bpmn:subProcess>
   </bpmn:process>
   <bpmn:process id="Process_03nuo35" isExecutable="false">
     <bpmn:laneSet id="LaneSet_0k13n3e">
@@ -485,59 +532,78 @@
         <bpmn:flowNodeRef>Activity_178k33m</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:subProcess id="Activity_14b239a" name="Retrieve All Users Task">
-      <bpmn:startEvent id="Event_06bs2ep" name="Retrieve All Users">
-        <bpmn:outgoing>Flow_0raapx4</bpmn:outgoing>
+    <bpmn:subProcess id="Activity_178k33m" name="Add Friend Task">
+      <bpmn:startEvent id="Event_102b7um" name="Add Friend">
+        <bpmn:outgoing>Flow_0sxluaq</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:serviceTask id="Activity_0qtm3tx" name="Retrieve all users and their information">
-        <bpmn:incoming>Flow_0raapx4</bpmn:incoming>
-        <bpmn:outgoing>Flow_0tcpdue</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_0u3a3cv">
-          <bpmn:targetRef>DataStoreReference_0egtqx2</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_0lrwtph">
-          <bpmn:targetRef>DataStoreReference_17ia7xk</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-      </bpmn:serviceTask>
-      <bpmn:dataStoreReference id="DataStoreReference_0egtqx2" name="User Table" />
-      <bpmn:endEvent id="Event_0xgcyyg" name="Retrieve Successful">
-        <bpmn:incoming>Flow_0tcpdue</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0tcpdue" sourceRef="Activity_0qtm3tx" targetRef="Event_0xgcyyg" />
-      <bpmn:sequenceFlow id="Flow_0raapx4" sourceRef="Event_06bs2ep" targetRef="Activity_0qtm3tx" />
-      <bpmn:dataStoreReference id="DataStoreReference_17ia7xk" name="User Friends Table" />
-    </bpmn:subProcess>
-    <bpmn:subProcess id="Activity_0v0afd9" name="Retrieve User Task">
-      <bpmn:startEvent id="Event_1f2dtgw" name="Retrieve User">
-        <bpmn:outgoing>Flow_01ouj88</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:serviceTask id="Activity_1m9crt8" name="Retrieve the user by userID and their information">
-        <bpmn:incoming>Flow_0b1mqpg</bpmn:incoming>
-        <bpmn:outgoing>Flow_1ecs5vl</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_0wcff63">
-          <bpmn:targetRef>DataStoreReference_1vtewa3</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_1mzp8wz">
-          <bpmn:targetRef>DataStoreReference_1h3f2a7</bpmn:targetRef>
-        </bpmn:dataOutputAssociation>
-      </bpmn:serviceTask>
-      <bpmn:endEvent id="Event_0ikscrc" name="Retrieve Successful">
-        <bpmn:incoming>Flow_1ecs5vl</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:dataStoreReference id="DataStoreReference_1vtewa3" name="User Table" />
-      <bpmn:dataStoreReference id="DataStoreReference_1h3f2a7" name="User Friends Table" />
-      <bpmn:sequenceFlow id="Flow_1ecs5vl" sourceRef="Activity_1m9crt8" targetRef="Event_0ikscrc" />
-      <bpmn:exclusiveGateway id="Gateway_1iz57my" name="Valid User?">
-        <bpmn:incoming>Flow_01ouj88</bpmn:incoming>
-        <bpmn:outgoing>Flow_0b1mqpg</bpmn:outgoing>
-        <bpmn:outgoing>Flow_1elxfyf</bpmn:outgoing>
+      <bpmn:intermediateThrowEvent id="Event_02bjwln" name="Validate User">
+        <bpmn:incoming>Flow_0sxluaq</bpmn:incoming>
+        <bpmn:outgoing>Flow_0db501n</bpmn:outgoing>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_01pu6jf" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:exclusiveGateway id="Gateway_1vrn7da" name="Valid User Oauth?">
+        <bpmn:incoming>Flow_0db501n</bpmn:incoming>
+        <bpmn:outgoing>Flow_0b2xnd2</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0b35iwx</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_0b1mqpg" name="Yes" sourceRef="Gateway_1iz57my" targetRef="Activity_1m9crt8" />
-      <bpmn:sequenceFlow id="Flow_01ouj88" sourceRef="Event_1f2dtgw" targetRef="Gateway_1iz57my" />
-      <bpmn:endEvent id="Event_159zyi0" name="Do nothing">
-        <bpmn:incoming>Flow_1elxfyf</bpmn:incoming>
+      <bpmn:serviceTask id="Activity_0qt6oq5" name="Add the provided user as friend and update the friend list">
+        <bpmn:incoming>Flow_1pnqson</bpmn:incoming>
+        <bpmn:outgoing>Flow_15muxtj</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_17jojur">
+          <bpmn:targetRef>DataStoreReference_10l8rfo</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+      </bpmn:serviceTask>
+      <bpmn:dataStoreReference id="DataStoreReference_10l8rfo" name="User Friends Table" />
+      <bpmn:endEvent id="Event_10cqaqf" name="Successfully Added Friend">
+        <bpmn:incoming>Flow_15muxtj</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_1elxfyf" name="No" sourceRef="Gateway_1iz57my" targetRef="Event_159zyi0" />
+      <bpmn:exclusiveGateway id="Gateway_1x83szr" name="Valid User?">
+        <bpmn:incoming>Flow_0b35iwx</bpmn:incoming>
+        <bpmn:outgoing>Flow_1pnqson</bpmn:outgoing>
+        <bpmn:outgoing>Flow_1ukf4li</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:endEvent id="Event_04qa55x" name="Do nothing">
+        <bpmn:incoming>Flow_1ukf4li</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:intermediateThrowEvent id="Event_0vsnrso" name="Log Out">
+        <bpmn:incoming>Flow_0b2xnd2</bpmn:incoming>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_09oezsq" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:sequenceFlow id="Flow_0sxluaq" sourceRef="Event_102b7um" targetRef="Event_02bjwln" />
+      <bpmn:sequenceFlow id="Flow_0db501n" sourceRef="Event_02bjwln" targetRef="Gateway_1vrn7da" />
+      <bpmn:sequenceFlow id="Flow_0b2xnd2" name="No" sourceRef="Gateway_1vrn7da" targetRef="Event_0vsnrso" />
+      <bpmn:sequenceFlow id="Flow_0b35iwx" name="Yes" sourceRef="Gateway_1vrn7da" targetRef="Gateway_1x83szr" />
+      <bpmn:sequenceFlow id="Flow_1pnqson" name="Yes" sourceRef="Gateway_1x83szr" targetRef="Activity_0qt6oq5" />
+      <bpmn:sequenceFlow id="Flow_15muxtj" sourceRef="Activity_0qt6oq5" targetRef="Event_10cqaqf" />
+      <bpmn:sequenceFlow id="Flow_1ukf4li" name="No" sourceRef="Gateway_1x83szr" targetRef="Event_04qa55x" />
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_0rh62pq" name="User Creation Task">
+      <bpmn:startEvent id="Event_0g5b71a" name="Create User">
+        <bpmn:outgoing>Flow_12mftdr</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:serviceTask id="Activity_1jkqa7i" name="Retrieve relevant information about the user and store">
+        <bpmn:incoming>Flow_12mftdr</bpmn:incoming>
+        <bpmn:outgoing>Flow_1d3pccs</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_1nlokeb">
+          <bpmn:targetRef>DataStoreReference_0sqsutj</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_0ra008k">
+          <bpmn:targetRef>DataStoreReference_0825pj8</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_12mftdr" sourceRef="Event_0g5b71a" targetRef="Activity_1jkqa7i" />
+      <bpmn:dataStoreReference id="DataStoreReference_0825pj8" name="User Friends Table" />
+      <bpmn:dataStoreReference id="DataStoreReference_0sqsutj" name="User Table" />
+      <bpmn:sequenceFlow id="Flow_1d3pccs" sourceRef="Activity_1jkqa7i" targetRef="Event_18queh5" />
+      <bpmn:intermediateThrowEvent id="Event_18queh5" name="Log In">
+        <bpmn:incoming>Flow_1d3pccs</bpmn:incoming>
+        <bpmn:outgoing>Flow_0tozoj3</bpmn:outgoing>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_10738ap" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:endEvent id="Event_0qs14ih" name="Create Successful">
+        <bpmn:incoming>Flow_0tozoj3</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0tozoj3" sourceRef="Event_18queh5" targetRef="Event_0qs14ih" />
     </bpmn:subProcess>
     <bpmn:subProcess id="Activity_0x2afz3" name="Retrieve Friend List Task">
       <bpmn:startEvent id="Event_1q8g1bt" name="Retrieve Friend List">
@@ -584,78 +650,59 @@
         <bpmn:signalEventDefinition id="SignalEventDefinition_1s370hu" />
       </bpmn:intermediateThrowEvent>
     </bpmn:subProcess>
-    <bpmn:subProcess id="Activity_0rh62pq" name="User Creation Task">
-      <bpmn:startEvent id="Event_0g5b71a" name="Create User">
-        <bpmn:outgoing>Flow_12mftdr</bpmn:outgoing>
+    <bpmn:subProcess id="Activity_0v0afd9" name="Retrieve User Task">
+      <bpmn:startEvent id="Event_1f2dtgw" name="Retrieve User">
+        <bpmn:outgoing>Flow_01ouj88</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:serviceTask id="Activity_1jkqa7i" name="Retrieve relevant information about the user and store">
-        <bpmn:incoming>Flow_12mftdr</bpmn:incoming>
-        <bpmn:outgoing>Flow_1d3pccs</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_1nlokeb">
-          <bpmn:targetRef>DataStoreReference_0sqsutj</bpmn:targetRef>
+      <bpmn:serviceTask id="Activity_1m9crt8" name="Retrieve the user by userID and their information">
+        <bpmn:incoming>Flow_0b1mqpg</bpmn:incoming>
+        <bpmn:outgoing>Flow_1ecs5vl</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_0wcff63">
+          <bpmn:targetRef>DataStoreReference_1vtewa3</bpmn:targetRef>
         </bpmn:dataOutputAssociation>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_0ra008k">
-          <bpmn:targetRef>DataStoreReference_0825pj8</bpmn:targetRef>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_1mzp8wz">
+          <bpmn:targetRef>DataStoreReference_1h3f2a7</bpmn:targetRef>
         </bpmn:dataOutputAssociation>
       </bpmn:serviceTask>
-      <bpmn:sequenceFlow id="Flow_12mftdr" sourceRef="Event_0g5b71a" targetRef="Activity_1jkqa7i" />
-      <bpmn:dataStoreReference id="DataStoreReference_0825pj8" name="User Friends Table" />
-      <bpmn:dataStoreReference id="DataStoreReference_0sqsutj" name="User Table" />
-      <bpmn:sequenceFlow id="Flow_1d3pccs" sourceRef="Activity_1jkqa7i" targetRef="Event_18queh5" />
-      <bpmn:intermediateThrowEvent id="Event_18queh5" name="Log In">
-        <bpmn:incoming>Flow_1d3pccs</bpmn:incoming>
-        <bpmn:outgoing>Flow_0tozoj3</bpmn:outgoing>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_10738ap" />
-      </bpmn:intermediateThrowEvent>
-      <bpmn:endEvent id="Event_0qs14ih" name="Create Successful">
-        <bpmn:incoming>Flow_0tozoj3</bpmn:incoming>
+      <bpmn:endEvent id="Event_0ikscrc" name="Retrieve Successful">
+        <bpmn:incoming>Flow_1ecs5vl</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0tozoj3" sourceRef="Event_18queh5" targetRef="Event_0qs14ih" />
+      <bpmn:dataStoreReference id="DataStoreReference_1vtewa3" name="User Table" />
+      <bpmn:dataStoreReference id="DataStoreReference_1h3f2a7" name="User Friends Table" />
+      <bpmn:sequenceFlow id="Flow_1ecs5vl" sourceRef="Activity_1m9crt8" targetRef="Event_0ikscrc" />
+      <bpmn:exclusiveGateway id="Gateway_1iz57my" name="Valid User?">
+        <bpmn:incoming>Flow_01ouj88</bpmn:incoming>
+        <bpmn:outgoing>Flow_0b1mqpg</bpmn:outgoing>
+        <bpmn:outgoing>Flow_1elxfyf</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_0b1mqpg" name="Yes" sourceRef="Gateway_1iz57my" targetRef="Activity_1m9crt8" />
+      <bpmn:sequenceFlow id="Flow_01ouj88" sourceRef="Event_1f2dtgw" targetRef="Gateway_1iz57my" />
+      <bpmn:endEvent id="Event_159zyi0" name="Do nothing">
+        <bpmn:incoming>Flow_1elxfyf</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_1elxfyf" name="No" sourceRef="Gateway_1iz57my" targetRef="Event_159zyi0" />
     </bpmn:subProcess>
-    <bpmn:subProcess id="Activity_178k33m" name="Add Friend Task">
-      <bpmn:startEvent id="Event_102b7um" name="Add Friend">
-        <bpmn:outgoing>Flow_0sxluaq</bpmn:outgoing>
+    <bpmn:subProcess id="Activity_14b239a" name="Retrieve All Users Task">
+      <bpmn:startEvent id="Event_06bs2ep" name="Retrieve All Users">
+        <bpmn:outgoing>Flow_0raapx4</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:intermediateThrowEvent id="Event_02bjwln" name="Validate User">
-        <bpmn:incoming>Flow_0sxluaq</bpmn:incoming>
-        <bpmn:outgoing>Flow_0db501n</bpmn:outgoing>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_01pu6jf" />
-      </bpmn:intermediateThrowEvent>
-      <bpmn:exclusiveGateway id="Gateway_1vrn7da" name="Valid User Oauth?">
-        <bpmn:incoming>Flow_0db501n</bpmn:incoming>
-        <bpmn:outgoing>Flow_0b2xnd2</bpmn:outgoing>
-        <bpmn:outgoing>Flow_0b35iwx</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:serviceTask id="Activity_0qt6oq5" name="Add the provided user as friend and update the friend list">
-        <bpmn:incoming>Flow_1pnqson</bpmn:incoming>
-        <bpmn:outgoing>Flow_15muxtj</bpmn:outgoing>
-        <bpmn:dataOutputAssociation id="DataOutputAssociation_17jojur">
-          <bpmn:targetRef>DataStoreReference_10l8rfo</bpmn:targetRef>
+      <bpmn:serviceTask id="Activity_0qtm3tx" name="Retrieve all users and their information">
+        <bpmn:incoming>Flow_0raapx4</bpmn:incoming>
+        <bpmn:outgoing>Flow_0tcpdue</bpmn:outgoing>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_0u3a3cv">
+          <bpmn:targetRef>DataStoreReference_0egtqx2</bpmn:targetRef>
+        </bpmn:dataOutputAssociation>
+        <bpmn:dataOutputAssociation id="DataOutputAssociation_0lrwtph">
+          <bpmn:targetRef>DataStoreReference_17ia7xk</bpmn:targetRef>
         </bpmn:dataOutputAssociation>
       </bpmn:serviceTask>
-      <bpmn:dataStoreReference id="DataStoreReference_10l8rfo" name="User Friends Table" />
-      <bpmn:endEvent id="Event_10cqaqf" name="Successfully Added Friend">
-        <bpmn:incoming>Flow_15muxtj</bpmn:incoming>
+      <bpmn:dataStoreReference id="DataStoreReference_0egtqx2" name="User Table" />
+      <bpmn:endEvent id="Event_0xgcyyg" name="Retrieve Successful">
+        <bpmn:incoming>Flow_0tcpdue</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:exclusiveGateway id="Gateway_1x83szr" name="Valid User?">
-        <bpmn:incoming>Flow_0b35iwx</bpmn:incoming>
-        <bpmn:outgoing>Flow_1pnqson</bpmn:outgoing>
-        <bpmn:outgoing>Flow_1ukf4li</bpmn:outgoing>
-      </bpmn:exclusiveGateway>
-      <bpmn:endEvent id="Event_04qa55x" name="Do nothing">
-        <bpmn:incoming>Flow_1ukf4li</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:intermediateThrowEvent id="Event_0vsnrso" name="Log Out">
-        <bpmn:incoming>Flow_0b2xnd2</bpmn:incoming>
-        <bpmn:signalEventDefinition id="SignalEventDefinition_09oezsq" />
-      </bpmn:intermediateThrowEvent>
-      <bpmn:sequenceFlow id="Flow_0sxluaq" sourceRef="Event_102b7um" targetRef="Event_02bjwln" />
-      <bpmn:sequenceFlow id="Flow_0db501n" sourceRef="Event_02bjwln" targetRef="Gateway_1vrn7da" />
-      <bpmn:sequenceFlow id="Flow_0b2xnd2" name="No" sourceRef="Gateway_1vrn7da" targetRef="Event_0vsnrso" />
-      <bpmn:sequenceFlow id="Flow_0b35iwx" name="Yes" sourceRef="Gateway_1vrn7da" targetRef="Gateway_1x83szr" />
-      <bpmn:sequenceFlow id="Flow_1pnqson" name="Yes" sourceRef="Gateway_1x83szr" targetRef="Activity_0qt6oq5" />
-      <bpmn:sequenceFlow id="Flow_15muxtj" sourceRef="Activity_0qt6oq5" targetRef="Event_10cqaqf" />
-      <bpmn:sequenceFlow id="Flow_1ukf4li" name="No" sourceRef="Gateway_1x83szr" targetRef="Event_04qa55x" />
+      <bpmn:sequenceFlow id="Flow_0tcpdue" sourceRef="Activity_0qtm3tx" targetRef="Event_0xgcyyg" />
+      <bpmn:sequenceFlow id="Flow_0raapx4" sourceRef="Event_06bs2ep" targetRef="Activity_0qtm3tx" />
+      <bpmn:dataStoreReference id="DataStoreReference_17ia7xk" name="User Friends Table" />
     </bpmn:subProcess>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -1052,35 +1099,132 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_0nxbb37_di" bpmnElement="Participant_0nxbb37" isHorizontal="true">
-        <dc:Bounds x="170" y="3660" width="370" height="250" />
+        <dc:Bounds x="170" y="3660" width="870" height="590" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0gusdf5_di" bpmnElement="Activity_0gusdf5" isExpanded="true">
+        <dc:Bounds x="220" y="3960" width="800" height="270" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0k0d9bl_di" bpmnElement="Flow_0k0d9bl">
+        <di:waypoint x="278" y="4060" />
+        <di:waypoint x="372" y="4060" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0sr8rqi_di" bpmnElement="Flow_0sr8rqi">
+        <di:waypoint x="408" y="4060" />
+        <di:waypoint x="505" y="4060" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ay3a0v_di" bpmnElement="Flow_0ay3a0v">
+        <di:waypoint x="530" y="4085" />
+        <di:waypoint x="530" y="4142" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="542" y="4108" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0i1dj5y_di" bpmnElement="Flow_0i1dj5y">
+        <di:waypoint x="555" y="4060" />
+        <di:waypoint x="637" y="4060" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="587" y="4042" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0k5xgyv_di" bpmnElement="Flow_0k5xgyv">
+        <di:waypoint x="687" y="4060" />
+        <di:waypoint x="780" y="4060" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="725" y="4042" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09sb0ea_di" bpmnElement="Flow_09sb0ea">
+        <di:waypoint x="880" y="4060" />
+        <di:waypoint x="962" y="4060" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17a5cu5_di" bpmnElement="Flow_17a5cu5">
+        <di:waypoint x="662" y="4085" />
+        <di:waypoint x="662" y="4142" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="672" y="4108" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_15n2kci_di" bpmnElement="Event_15n2kci">
+        <dc:Bounds x="242" y="4042" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="232" y="4085" width="55" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1szn3j0_di" bpmnElement="Event_1szn3j0">
+        <dc:Bounds x="372" y="4042" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="357" y="4085" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_08qzwwk_di" bpmnElement="Gateway_08qzwwk" isMarkerVisible="true">
+        <dc:Bounds x="505" y="4035" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="486" y="4013" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ql0f92_di" bpmnElement="Activity_0ql0f92">
+        <dc:Bounds x="780" y="4020" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataStoreReference_090lrw6_di" bpmnElement="DataStoreReference_090lrw6">
+        <dc:Bounds x="805" y="4135" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="789" y="4192" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1n6hccx_di" bpmnElement="Event_1n6hccx">
+        <dc:Bounds x="962" y="4042" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="949" y="4085" width="62" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0eu1kvu_di" bpmnElement="Gateway_0eu1kvu" isMarkerVisible="true">
+        <dc:Bounds x="637" y="4035" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="635" y="4013" width="56" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0v4fb3b_di" bpmnElement="Event_0v4fb3b">
+        <dc:Bounds x="644" y="4142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="635" y="4185" width="54" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_01e6h9m_di" bpmnElement="Event_01e6h9m">
+        <dc:Bounds x="512" y="4142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="510" y="4185" width="41" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1h6vp0a_di" bpmnElement="Activity_1h6vp0a" isExpanded="true">
+        <dc:Bounds x="220" y="3680" width="380" height="270" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0c6a0sj_di" bpmnElement="Flow_0c6a0sj">
-        <di:waypoint x="258" y="3740" />
-        <di:waypoint x="300" y="3740" />
+        <di:waypoint x="278" y="3780" />
+        <di:waypoint x="350" y="3780" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0uadhx0_di" bpmnElement="Flow_0uadhx0">
-        <di:waypoint x="400" y="3740" />
-        <di:waypoint x="472" y="3740" />
+        <di:waypoint x="450" y="3780" />
+        <di:waypoint x="532" y="3780" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1i0wbuj_di" bpmnElement="Event_0jv8k2m">
+        <dc:Bounds x="242" y="3762" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="224" y="3806" width="81" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0yo35n2_di" bpmnElement="Activity_0i0nn8t">
-        <dc:Bounds x="300" y="3700" width="100" height="80" />
+        <dc:Bounds x="350" y="3740" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="DataStoreReference_1lmkcdp_di" bpmnElement="DataStoreReference_1lmkcdp">
-        <dc:Bounds x="325" y="3815" width="50" height="50" />
+        <dc:Bounds x="375" y="3855" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="308" y="3872" width="84" height="14" />
+          <dc:Bounds x="358" y="3912" width="84" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_15jbej5_di" bpmnElement="Event_15jbej5">
-        <dc:Bounds x="472" y="3722" width="36" height="36" />
+        <dc:Bounds x="532" y="3762" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="463" y="3765" width="55" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1i0wbuj_di" bpmnElement="Event_0jv8k2m">
-        <dc:Bounds x="222" y="3722" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="212" y="3685" width="55" height="27" />
+          <dc:Bounds x="523" y="3805" width="55" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_0g7nl52_di" bpmnElement="Participant_0g7nl52" isHorizontal="true">
@@ -1921,10 +2065,6 @@
         <di:waypoint x="1005" y="233" />
         <di:waypoint x="1005" y="268" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataOutputAssociation_10mhi4d_di" bpmnElement="DataOutputAssociation_10mhi4d">
-        <di:waypoint x="350" y="3780" />
-        <di:waypoint x="350" y="3815" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataOutputAssociation_1yi83p7_di" bpmnElement="DataOutputAssociation_1yi83p7">
         <di:waypoint x="684" y="1398" />
         <di:waypoint x="684" y="1433" />
@@ -1991,6 +2131,14 @@
       <bpmndi:BPMNEdge id="DataOutputAssociation_17jojur_di" bpmnElement="DataOutputAssociation_17jojur">
         <di:waypoint x="820" y="3480" />
         <di:waypoint x="820" y="3515" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_04oui83_di" bpmnElement="DataOutputAssociation_04oui83">
+        <di:waypoint x="830" y="4100" />
+        <di:waypoint x="830" y="4135" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_10mhi4d_di" bpmnElement="DataOutputAssociation_10mhi4d">
+        <di:waypoint x="400" y="3820" />
+        <di:waypoint x="400" y="3855" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
