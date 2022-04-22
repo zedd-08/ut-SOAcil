@@ -10,7 +10,7 @@ This folder contains all the required deployment YAML files to ge tthe applicati
 
 There are two files required for mysql deployment to k8s.
 
-1. The file `mysql-pv.yaml` contains persistent storage ivolume information used by mysql pod for storage. This is neccessary because it would prevent loss of information if an existing pod stops running.
+1. The file `mysql-pv.yaml` contains persistent storage volume information used by mysql pod for storage. This is neccessary because it would prevent loss of information if an existing pod stops running.
 2. The file `mysql-deployment.yaml` contains the deployment information for the `mysql:5.6` image to the k8s cluster. The following environment variables are required to setup the DB for use with the application:
 
    ```
